@@ -1,167 +1,146 @@
-# TutoLabPro - Portfolio Dynamique
+# Portfolio avec Back-end
 
-Un portfolio professionnel dynamique développé avec PHP, MySQL et Bootstrap. Ce projet permet de créer un portfolio personnalisé avec une gestion dynamique du contenu via une base de données.
+Ce projet est un portfolio professionnel développé avec PHP et MySQL, offrant une interface moderne et responsive pour présenter vos projets et compétences.
 
-## 🚀 Fonctionnalités
+## Pages Principales
 
-- Design responsive et moderne
-- Mode sombre/clair
-- Sections personnalisables :
-  - Profil
-  - Projets
-  - Compétences
+### 1. Page d'Accueil (index.php)
+La page d'accueil présente l'ensemble du portfolio avec les sections suivantes :
+
+#### En-tête
+- Photo de profil
+- Nom et titre professionnel
+- Liens vers les réseaux sociaux (Twitter, LinkedIn, GitHub)
+- Bouton de contact
+- Switch pour le mode sombre/clair
+
+#### Section Principale
+- Présentation personnelle
+- Liste des projets récents
+- Section "À propos"
   - Expérience professionnelle
-- Intégration GitHub (calendrier et flux d'activité)
-- Animations fluides
-- Gestion multilingue
-- Mode debug
-- Système de commentaires authentifié
 
-## 📋 Prérequis
+#### Barre Latérale
+- Informations de contact
+- Liste des compétences avec niveaux
+- Intégration GitHub (calendrier et activité)
 
+### 2. Page de Connexion (login.php)
+Interface d'authentification sécurisée :
+
+#### Fonctionnalités
+- Formulaire de connexion avec validation
+- Gestion des sessions utilisateur
+- Redirection intelligente après connexion
+- Messages d'erreur personnalisés
+- Protection contre les injections SQL
+- Interface responsive
+
+#### Sécurité
+- Hachage des mots de passe (SHA1)
+- Protection contre les attaques XSS
+- Validation des entrées utilisateur
+- Gestion sécurisée des sessions
+
+### 3. Page de Projet (project.php)
+Page détaillée pour chaque projet :
+
+#### Affichage du Projet
+- Titre et description
+- Image principale
+- Date de création
+- Statut (mis en avant ou non)
+- Lien vers le projet
+
+#### Système de Commentaires
+- Liste des commentaires existants
+- Formulaire de commentaire pour utilisateurs connectés
+- Gestion des droits (modération, suppression)
+- Interface utilisateur intuitive
+
+#### Fonctionnalités Sociales
+- Partage sur réseaux sociaux
+- Intégration avec GitHub
+- Système de notation (à venir)
+
+## Installation et Configuration
+
+### Prérequis
 - PHP 7.4 ou supérieur
 - MySQL 5.7 ou supérieur
 - Serveur web (Apache/Nginx)
-- Composer (optionnel)
 
-## 🛠️ Installation
+### Installation
+1. Cloner le repository
+2. Configurer la base de données dans `config.php`
+3. Importer le fichier `database.sql`
+4. Configurer les paramètres de l'application
 
-1. Clonez le dépôt :
-```bash
-git clone https://github.com/votre-username/tutolabpro.git
-```
-
-2. Créez la base de données en utilisant le script SQL fourni :
-```bash
-mysql -u votre_utilisateur -p votre_base_de_donnees < database.sql
-```
-
-3. Configurez la connexion à la base de données dans `config.php` :
+### Configuration
 ```php
+// Base de données
 define('DB_HOST', 'localhost');
-define('DB_NAME', 'votre_base_de_donnees');
+define('DB_NAME', 'portfolio');
 define('DB_USER', 'votre_utilisateur');
 define('DB_PASS', 'votre_mot_de_passe');
+
+// Application
+define('DEBUG_MODE', false);
+define('DEFAULT_LOCALE', 'fr_FR');
+define('gSYSTEM_URL', 'http://votre-domaine.com/');
 ```
 
-4. Configurez votre serveur web pour pointer vers le répertoire du projet
+## Technologies Utilisées
 
-## 📁 Structure du Projet
+### Back-end
+- PHP 7.4+
+- MySQL 5.7+
+- PDO pour la gestion de la base de données
+- Sessions PHP pour l'authentification
 
-```
-tutolabpro/
-├── assets/
-│   ├── css/
-│   ├── js/
-│   └── images/
-├── includes/
-│   ├── Database.php
-│   ├── functions.php
-│   └── handle_comment.php
-├── config.php
-├── database.sql
-├── index.php
-├── project.php
-├── login.php
-└── logout.php
-```
+### Front-end
+- Bootstrap 5 pour le design responsive
+- FontAwesome pour les icônes
+- jQuery pour les interactions
+- GitHub API pour l'intégration
 
-## ⚙️ Configuration
-
-Le fichier `config.php` contient les paramètres suivants :
-
-```php
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'votre_base_de_donnees');
-define('DB_USER', 'votre_utilisateur');
-define('DB_PASS', 'votre_mot_de_passe');
-define('DEBUGGING', false);
-define('SYS_URL', 'http://votre-domaine.com/');
-define('DEFAULT_LOCALE', 'fr');
-```
-
-## 🎨 Personnalisation
-
-### Thème
-- Modifiez les couleurs dans `assets/css/styles.css`
-- Personnalisez les polices dans `index.php`
-
-### Contenu
-- Ajoutez/modifiez les données dans la base de données
-- Personnalisez les sections dans `index.php`
-
-## 🔒 Sécurité
-
-- Protection contre les injections SQL via PDO
-- Échappement des données affichées
-- Gestion sécurisée des mots de passe
-- Protection XSS
-
-## 🌐 Support Multilingue
-
-Le projet supporte le multilingue via la constante `DEFAULT_LOCALE`. Pour ajouter une nouvelle langue :
-
-1. Créez un fichier de traduction dans `assets/locales/`
-2. Modifiez `DEFAULT_LOCALE` dans `config.php`
-
-## 🐛 Mode Debug
-
-Activez le mode debug dans `config.php` pour afficher les erreurs :
-
-```php
-define('DEBUGGING', true);
-```
-
-## 📝 Contribution
+## Contribution
 
 Les contributions sont les bienvenues ! N'hésitez pas à :
-
 1. Fork le projet
-2. Créer une branche (`git checkout -b feature/AmazingFeature`)
-3. Commit vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
+2. Créer une branche pour votre fonctionnalité
+3. Commiter vos changements
+4. Pousser vers la branche
 5. Ouvrir une Pull Request
 
-## 📄 Licence
+## Licence
 
 Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
 
-## 👥 Auteurs
+## Structure du Projet
 
-- Votre Nom - [@votre_twitter](https://twitter.com/votre_twitter)
-
-## 🙏 Remerciements
-
-- [Bootstrap](https://getbootstrap.com/)
-- [Font Awesome](https://fontawesome.com/)
-- [GitHub Calendar](https://github.com/IonicaBizau/github-calendar)
-- [GitHub Activity Feed](https://github.com/caseyscarborough/github-activity)
-- [jQuery](https://jquery.com/)
-
-## 📄 Système de commentaires
-
-Le système de commentaires permet aux utilisateurs connectés de commenter les projets :
-
-### 🚀 Fonctionnalités
-- Authentification requise pour commenter
-- Commentaires en temps réel avec AJAX
-- Affichage du nom d'utilisateur et de la date
-- Protection contre les injections SQL et XSS
-- Gestion des sessions sécurisée
-
-### 📋 Utilisation
-1. Créez un compte utilisateur dans la base de données :
-```sql
-INSERT INTO users (username, email, password) 
-VALUES ('votre_username', 'votre@email.com', '$2y$10$votre_hash_password');
 ```
-
-2. Connectez-vous avec vos identifiants
-3. Accédez à un projet pour voir et ajouter des commentaires
-
-### 🔒 Sécurité
-- Protection contre les injections SQL avec PDO
-- Protection XSS avec htmlspecialchars()
-- Mots de passe hashés avec password_hash()
-- Sessions sécurisées
-- Validation des données côté serveur 
+porteflio-with-back-end/
+├── app/
+│   ├── config/
+│   │   └── config.php
+│   ├── controllers/
+│   │   └── HomeController.php
+│   ├── core/
+│   │   ├── Controller.php
+│   │   ├── Database.php
+│   │   └── Model.php
+│   ├── models/
+│   │   └── ProjectModel.php
+│   └── views/
+│       ├── layouts/
+│       │   ├── header.php
+│       │   └── footer.php
+│       └── home/
+│           └── index.php
+├── public/
+│   ├── css/
+│   ├── js/
+│   └── img/
+└── index.php
+```

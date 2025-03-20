@@ -1,3 +1,7 @@
+-- Création de la base de données
+CREATE DATABASE IF NOT EXISTS portfolio;
+USE portfolio;
+
 -- Création de la table profile
 -- Stocke les informations personnelles de l'utilisateur
 CREATE TABLE IF NOT EXISTS profile (
@@ -23,7 +27,8 @@ CREATE TABLE IF NOT EXISTS projects (
     image_url VARCHAR(255),                   -- URL de l'image du projet
     project_url VARCHAR(255),                 -- URL du projet
     is_featured BOOLEAN DEFAULT FALSE,        -- Projet mis en avant
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Date de création
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Création de la table skills
@@ -33,7 +38,8 @@ CREATE TABLE IF NOT EXISTS skills (
     name VARCHAR(100) NOT NULL,               -- Nom de la compétence
     level INT NOT NULL,                       -- Niveau de maîtrise (0-100)
     category VARCHAR(50),                     -- Catégorie de la compétence
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP  -- Date de création
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category) REFERENCES categories(name) ON DELETE SET NULL
 );
 
 -- Création de la table experience
@@ -70,6 +76,19 @@ CREATE TABLE IF NOT EXISTS comments (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE -- Clé étrangère vers users
 );
 
+-- Table des catégories de compétences
+CREATE TABLE IF NOT EXISTS categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    description TEXT
+);
+
+-- Insertion des catégories de compétences
+INSERT INTO categories (name, description) VALUES
+('Front-end', 'Technologies liées à l''interface utilisateur'),
+('Back-end', 'Technologies liées au serveur et à la base de données'),
+('Outils', 'Outils de développement et autres technologies');
+
 -- Insertion des données de test
 -- Données de profil
 INSERT INTO profile (name, title, description, location, email, website) VALUES
@@ -94,4 +113,8 @@ INSERT INTO experience (title, company, location, start_date, end_date, descript
 
 -- Insertion d'un utilisateur de test
 INSERT INTO users (username, email, password) VALUES
-('test_user', 'test@example.com', SHA1('password123')); -- mot de passe: password123 
+('test_user', 'test@example.com', SHA1('password123')); -- mot de passe: password123
+
+-- Insertion d'un utilisateur administrateur par défaut
+INSERT INTO users (username, email, password) VALUES
+('admin', 'admin@example.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'); -- mot de passe: password 

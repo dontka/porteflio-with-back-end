@@ -11,41 +11,55 @@ if (isUserLoggedIn()) {
 }
 
 $error = '';
+$success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'] ?? '';
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
-    
-    if (empty($email) || empty($password)) {
+    $password_confirm = $_POST['password_confirm'] ?? '';
+
+    if (empty($username) || empty($email) || empty($password) || empty($password_confirm)) {
         $error = 'Veuillez remplir tous les champs';
+    } elseif (mb_strlen($username) < 3 || mb_strlen($username) > 50) {
+        $error = 'Le nom d\'utilisateur doit contenir entre 3 et 50 caractères';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = 'Veuillez entrer une adresse email valide';
+    } elseif (mb_strlen($password) < 6) {
+        $error = 'Le mot de passe doit contenir au moins 6 caractères';
+    } elseif ($password !== $password_confirm) {
+        $error = 'Les mots de passe ne correspondent pas';
     } else {
         $database = new Database();
         $db = $database->getConnection();
-        
+
         try {
-            // Hacher le mot de passe avec SHA1
-            $hashedPassword = sha1($password);
-            
-            $stmt = $db->prepare('SELECT id, username, password FROM users WHERE email = ?');
-            $stmt->execute([$email]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if ($user && $user['password'] === $hashedPassword) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                
-                // Rediriger vers la page précédente ou l'accueil
+            // Vérifier si l'email ou le nom d'utilisateur existe déjà
+            $stmt = $db->prepare('SELECT id FROM users WHERE email = ? OR username = ?');
+            $stmt->execute([$email, $username]);
+
+            if ($stmt->fetch()) {
+                $error = 'Cet email ou nom d\'utilisateur est déjà utilisé';
+            } else {
+                // Hacher le mot de passe avec SHA1 (cohérent avec login.php)
+                $hashedPassword = sha1($password);
+
+                $stmt = $db->prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)');
+                $stmt->execute([$username, $email, $hashedPassword]);
+
+                // Connecter automatiquement l'utilisateur
+                $_SESSION['user_id'] = $db->lastInsertId();
+                $_SESSION['username'] = $username;
+
                 $redirect = $_GET['redirect'] ?? 'index.php';
                 header('Location: ' . $redirect);
                 exit;
-            } else {
-                $error = 'Email ou mot de passe incorrect';
             }
         } catch (PDOException $e) {
             if (isDebugMode()) {
                 $error = 'Erreur de base de données : ' . $e->getMessage();
             } else {
-                $error = 'Une erreur est survenue';
+                $error = 'Une erreur est survenue, veuillez réessayer';
             }
         }
     }
@@ -56,20 +70,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Connexion - Donatien KANANE Portfolio</title>
-    
+    <title>Inscription - Donatien KANANE Portfolio</title>
+
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
+
     <!-- FontAwesome -->
     <script defer src="assets/fontawesome/js/all.js"></script>
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body class="login-page">
-    
+
     <div class="login-wrapper">
         <!-- Background shapes -->
         <div class="login-bg-shapes">
@@ -77,65 +91,79 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="shape shape-2"></div>
             <div class="shape shape-3"></div>
         </div>
-        
+
         <div class="login-container">
             <!-- Left branding panel -->
             <div class="login-brand-panel">
                 <div class="login-brand-content">
                     <a href="index.php" class="login-brand-logo">DK<span>.</span></a>
-                    <h2>Bienvenue</h2>
-                    <p>Connectez-vous pour interagir avec les projets et laisser vos commentaires.</p>
+                    <h2>Rejoignez-nous</h2>
+                    <p>Créez votre compte pour interagir avec les projets et partager vos commentaires.</p>
                     <div class="login-brand-decoration">
                         <div class="brand-ring"></div>
                         <div class="brand-dots"></div>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Right form panel -->
             <div class="login-form-panel">
                 <div class="login-form-header">
-                    <h3>Connexion</h3>
-                    <p>Entrez vos identifiants pour continuer</p>
+                    <h3>Inscription</h3>
+                    <p>Créez votre compte en quelques secondes</p>
                 </div>
-                
+
                 <?php if ($error): ?>
                     <div class="alert alert-danger d-flex align-items-center gap-2">
                         <i class="fas fa-exclamation-circle"></i>
                         <?php echo htmlspecialchars($error); ?>
                     </div>
                 <?php endif; ?>
-                
+
                 <form method="POST" action="">
+                    <div class="form-floating-custom mb-3">
+                        <label for="username">Nom d'utilisateur</label>
+                        <div class="input-icon-wrapper">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Votre nom d'utilisateur" value="<?php echo htmlspecialchars($username ?? ''); ?>" required>
+                            <i class="fas fa-user"></i>
+                        </div>
+                    </div>
                     <div class="form-floating-custom mb-3">
                         <label for="email">Email</label>
                         <div class="input-icon-wrapper">
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Votre adresse email" required>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Votre adresse email" value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
                             <i class="fas fa-envelope"></i>
                         </div>
                     </div>
                     <div class="form-floating-custom mb-3">
                         <label for="password">Mot de passe</label>
                         <div class="input-icon-wrapper">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Votre mot de passe" required>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Au moins 6 caractères" required>
                             <i class="fas fa-lock"></i>
                         </div>
                     </div>
+                    <div class="form-floating-custom mb-4">
+                        <label for="password_confirm">Confirmer le mot de passe</label>
+                        <div class="input-icon-wrapper">
+                            <input type="password" class="form-control" id="password_confirm" name="password_confirm" placeholder="Répétez votre mot de passe" required>
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary-custom btn-login w-100">
-                        <i class="fas fa-sign-in-alt"></i> Se connecter
+                        <i class="fas fa-user-plus"></i> Créer mon compte
                     </button>
                 </form>
-                
+
                 <div class="login-footer">
-                    <a href="register.php"><i class="fas fa-user-plus"></i> Pas encore de compte ? S'inscrire</a>
+                    <a href="login.php"><i class="fas fa-sign-in-alt"></i> Déjà un compte ? Se connecter</a>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- Scripts -->
     <script src="assets/plugins/popper.min.js"></script>
     <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/plugins/dark-mode-switch/dark-mode-switch.min.js"></script>
 </body>
-</html> 
+</html>

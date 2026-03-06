@@ -38,7 +38,11 @@ function sanitizeOutput($text) {
  * @return string Date formatée
  */
 function formatDate($date) {
-    return date('Y-m-d', strtotime($date));
+    $months = ['', 'Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+    $timestamp = strtotime($date);
+    $month = (int)date('n', $timestamp);
+    $year = date('Y', $timestamp);
+    return $months[$month] . ' ' . $year;
 }
 
 /**
@@ -193,6 +197,48 @@ function addProjectComment($db, $project_url, $user_id, $content) {
             echo "Erreur : " . $e->getMessage();
         }
         return false;
+    }
+}
+
+/**
+ * Récupère les articles de blog publiés
+ * @param PDO $db Instance de connexion PDO
+ * @param int $limit Nombre maximum d'articles
+ * @return array Liste des articles
+ */
+function getBlogPosts($db, $limit = 6) {
+    try {
+        $query = "SELECT * FROM blog_posts WHERE is_published = 1 ORDER BY created_at DESC LIMIT :limit";
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch(PDOException $e) {
+        if(DEBUGGING) {
+            echo "Erreur : " . $e->getMessage();
+        }
+        return [];
+    }
+}
+
+/**
+ * Récupère un article de blog par son slug
+ * @param PDO $db Instance de connexion PDO
+ * @param string $slug Slug de l'article
+ * @return array|null Données de l'article ou null
+ */
+function getBlogPost($db, $slug) {
+    try {
+        $query = "SELECT * FROM blog_posts WHERE slug = :slug AND is_published = 1 LIMIT 1";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':slug', $slug);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch(PDOException $e) {
+        if(DEBUGGING) {
+            echo "Erreur : " . $e->getMessage();
+        }
+        return null;
     }
 }
 ?> 

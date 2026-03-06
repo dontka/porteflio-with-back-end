@@ -1,94 +1,94 @@
-# Portfolio avec Back-end
+# Portfolio — Donatien TUMAINI KANANE
 
-Ce projet est un portfolio professionnel développé avec PHP et MySQL, offrant une interface moderne et responsive pour présenter vos projets et compétences.
+Portfolio professionnel de **Donatien TUMAINI KANANE**, développeur web full-stack et analyste de données basé à Goma, RDC. Développé avec PHP et MySQL, ce site offre une interface moderne et responsive pour présenter mes projets, compétences et parcours professionnel.
 
-## Pages Principales
+**🔗 LinkedIn :** [linkedin.com/in/afialab](https://cd.linkedin.com/in/afialab)  
+**🔗 GitHub :** [github.com/dontka](https://github.com/dontka)  
+**🔗 Site Web :** [schor.alwaysdata.net](http://schor.alwaysdata.net)  
+**📧 Contact :** donatienkanane@gmail.com
 
-### 1. Page d'Accueil (index.php)
-La page d'accueil présente l'ensemble du portfolio avec les sections suivantes :
+---
+
+## Aperçu
+
+### Page d'Accueil (index.php)
 
 #### En-tête
 - Photo de profil
 - Nom et titre professionnel
-- Liens vers les réseaux sociaux (Twitter, LinkedIn, GitHub)
+- Liens vers LinkedIn et GitHub
 - Bouton de contact
-- Switch pour le mode sombre/clair
+- Switch mode sombre/clair
 
 #### Section Principale
-- Présentation personnelle
-- Liste des projets récents
-- Section "À propos"
-  - Expérience professionnelle
+- Présentation personnelle (À Propos de Moi)
+- Projets récents (8 projets issus de GitHub)
+- Expérience professionnelle (6 postes)
 
 #### Barre Latérale
-- Informations de contact
-- Liste des compétences avec niveaux
-- Intégration GitHub (calendrier et activité)
+- Informations de contact (localisation, email, site web)
+- Compétences techniques avec niveaux (10 compétences)
+- Formation (Université de Goma, Institut Isidore Bakanja)
+- Langues (Français, Anglais, Kiswahili)
+- Calendrier de contributions GitHub
+- Flux d'activité GitHub
 
-### 2. Page de Connexion (login.php)
-Interface d'authentification sécurisée :
-
-#### Fonctionnalités
+### Page de Connexion (login.php)
 - Formulaire de connexion avec validation
 - Gestion des sessions utilisateur
-- Redirection intelligente après connexion
-- Messages d'erreur personnalisés
-- Protection contre les injections SQL
-- Interface responsive
+- Protection contre les injections SQL et XSS
 
-#### Sécurité
-- Hachage des mots de passe (SHA1)
-- Protection contre les attaques XSS
-- Validation des entrées utilisateur
-- Gestion sécurisée des sessions
+### Page de Projet (project.php)
+- Affichage détaillé de chaque projet
+- Système de commentaires pour utilisateurs connectés
+- Informations : date de création, statut, lien vers le dépôt
 
-### 3. Page de Projet (project.php)
-Page détaillée pour chaque projet :
+---
 
-#### Affichage du Projet
-- Titre et description
-- Image principale
-- Date de création
-- Statut (mis en avant ou non)
-- Lien vers le projet
+## Projets Présentés
 
-#### Système de Commentaires
-- Liste des commentaires existants
-- Formulaire de commentaire pour utilisateurs connectés
-- Gestion des droits (modération, suppression)
-- Interface utilisateur intuitive
+| Projet | Description | Technologies |
+|--------|-------------|-------------|
+| **AfiaZone** | Marketplace médicale avec E-Wallet Santé | PHP, MySQL |
+| **ASBL/ONG Manager** | Plateforme de gestion d'organisation tout-en-un | PHP |
+| **PHP Payment Gateway** | Package de gestion multi-paiements (Mobile Money, Stripe, PayPal…) | PHP |
+| **Saint-Tharcisse** | Application de gestion de servants de messe | PHP |
+| **CRUD ASBL/ONG** | Système CRUD pour associations et ONG | PHP |
+| **SCHOR Center** | Site du Centre de Consultance Scientifique | HTML, CSS |
+| **E-Commerce Responsive** | Site e-commerce responsive | HTML, CSS, JS |
+| **Blog avec Back-end** | Plateforme de blog avec authentification | PHP, MySQL |
 
-#### Fonctionnalités Sociales
-- Partage sur réseaux sociaux
-- Intégration avec GitHub
-- Système de notation (à venir)
+---
 
 ## Installation et Configuration
 
 ### Prérequis
 - PHP 7.4 ou supérieur
 - MySQL 5.7 ou supérieur
-- Serveur web (Apache/Nginx)
+- Serveur web (Apache/Nginx) — recommandé : [Laragon](https://laragon.org/)
 
 ### Installation
-1. Cloner le repository
+1. Cloner le repository :
+   ```bash
+   git clone https://github.com/dontka/porteflio-with-back-end.git
+   ```
 2. Configurer la base de données dans `config.php`
-3. Importer le fichier `database.sql`
-4. Configurer les paramètres de l'application
+3. Importer le fichier `database.sql` dans MySQL
+4. Ajouter votre photo de profil dans `assets/images/profile.png`
+5. Ajouter des captures d'écran de projets dans `assets/images/projects/`
 
 ### Configuration
 ```php
-// Base de données
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'portfolio');
-define('DB_USER', 'votre_utilisateur');
-define('DB_PASS', 'votre_mot_de_passe');
-
-// Application
-define('DEBUG_MODE', false);
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('SYS_URL', 'http://localhost/porteflio-with-back-end/');
+define('DEBUGGING', false);
 define('DEFAULT_LOCALE', 'fr_FR');
-define('gSYSTEM_URL', 'http://votre-domaine.com/');
 ```
+
+---
 
 ## Technologies Utilisées
 
@@ -100,47 +100,54 @@ define('gSYSTEM_URL', 'http://votre-domaine.com/');
 
 ### Front-end
 - Bootstrap 5 pour le design responsive
-- FontAwesome pour les icônes
-- jQuery pour les interactions
-- GitHub API pour l'intégration
+- FontAwesome 6 pour les icônes
+- JavaScript vanilla
+- GitHub Calendar & Activity API
 
-## Contribution
+### Outils
+- Git & GitHub
+- Laragon (environnement local)
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
-1. Fork le projet
-2. Créer une branche pour votre fonctionnalité
-3. Commiter vos changements
-4. Pousser vers la branche
-5. Ouvrir une Pull Request
-
-## Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+---
 
 ## Structure du Projet
 
 ```
 porteflio-with-back-end/
-├── app/
-│   ├── config/
-│   │   └── config.php
-│   ├── controllers/
-│   │   └── HomeController.php
-│   ├── core/
-│   │   ├── Controller.php
-│   │   ├── Database.php
-│   │   └── Model.php
-│   ├── models/
-│   │   └── ProjectModel.php
-│   └── views/
-│       ├── layouts/
-│       │   ├── header.php
-│       │   └── footer.php
-│       └── home/
-│           └── index.php
-├── public/
-│   ├── css/
-│   ├── js/
-│   └── img/
-└── index.php
+├── config.php                 # Configuration (BDD, URL, locale)
+├── index.php                  # Page d'accueil du portfolio
+├── project.php                # Page détaillée d'un projet
+├── login.php                  # Page de connexion
+├── logout.php                 # Déconnexion
+├── database.sql               # Script SQL (structure + données)
+├── includes/
+│   ├── Database.php           # Classe de connexion PDO
+│   ├── functions.php          # Fonctions utilitaires
+│   ├── handle_comment.php     # Traitement des commentaires
+│   └── delete_comment.php     # Suppression de commentaires
+├── assets/
+│   ├── css/styles.css         # Styles du thème
+│   ├── js/main.js             # Scripts (GitHub Calendar, RSS, Dark Mode)
+│   ├── images/                # Photos de profil et projets
+│   ├── fontawesome/           # Icônes FontAwesome 6
+│   ├── plugins/               # Bootstrap, Popper, Dark Mode Switch
+│   └── scss/                  # Sources SCSS
+└── README.md
 ```
+
+---
+
+## Auteur
+
+**Donatien TUMAINI KANANE**  
+Développeur Web Full-Stack & Analyste de Données  
+Goma, République Démocratique du Congo  
+
+- 📧 donatienkanane@gmail.com  
+- 🔗 [LinkedIn](https://cd.linkedin.com/in/afialab)  
+- 💻 [GitHub](https://github.com/dontka)  
+- 🌐 [schor.alwaysdata.net](http://schor.alwaysdata.net)
+
+## Licence
+
+Ce projet est sous licence Apache 2.0. Voir le fichier `LICENSE` pour plus de détails.

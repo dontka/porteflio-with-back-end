@@ -28,17 +28,16 @@ $locale = getDefaultLocale();
 <!DOCTYPE html>
 <html lang="<?php echo substr($locale, 0, 2); ?>">
 <head>
-    <title><?php echo $debugMode ? '[DEBUG] ' : ''; ?><?php echo sanitizeOutput($project['title']); ?> - TutoLabPro</title>
+    <title><?php echo $debugMode ? '[DEBUG] ' : ''; ?><?php echo sanitizeOutput($project['title']); ?> - Donatien KANANE</title>
     <!-- Meta -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?php echo sanitizeOutput($project['description']); ?>">
-    <meta name="author" content="<?php echo sanitizeOutput($profile['name'] ?? 'TutoLabPro'); ?>">    
+    <meta name="author" content="<?php echo sanitizeOutput($profile['name'] ?? 'Donatien KANANE'); ?>">    
     <link rel="shortcut icon" href="favicon.ico">  
     
-    <link href='https://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'> 
+    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap' rel='stylesheet' type='text/css'> 
     
     <!-- FontAwesome JS -->
     <script defer src="<?php echo $systemUrl; ?>assets/fontawesome/js/all.js"></script>
@@ -51,112 +50,98 @@ $locale = getDefaultLocale();
 </head> 
 
 <body>
-    <!-- ******HEADER****** --> 
-    <header class="header">
-        <div class="container">     
-            <div class="row align-items-center">
-                <div class="col">         
-                    <img class="profile-image img-fluid float-start rounded-circle" src="<?php echo $systemUrl; ?>assets/images/profile.png" alt="profile image" />
-                    <div class="profile-content">
-                        <h1 class="name"><?php echo sanitizeOutput($profile['name'] ?? 'James Lee'); ?></h1>
-                        <h2 class="desc"><?php echo sanitizeOutput($profile['title'] ?? 'Web App Developer'); ?></h2>   
-                        <ul class="social list-inline">
-                            <?php if (!empty($profile['twitter_url'])): ?>
-                            <li class="list-inline-item"><a href="<?php echo sanitizeOutput($profile['twitter_url']); ?>"><i class="fa-brands fa-x-twitter"></i></a></li>
-                            <?php endif; ?>
-                            <?php if (!empty($profile['linkedin_url'])): ?>
-                            <li class="list-inline-item"><a href="<?php echo sanitizeOutput($profile['linkedin_url']); ?>"><i class="fa-brands fa-linkedin-in"></i></a></li>
-                            <?php endif; ?>
-                            <?php if (!empty($profile['github_username'])): ?>
-                            <li class="list-inline-item"><a href="https://github.com/<?php echo sanitizeOutput($profile['github_username']); ?>"><i class="fa-brands fa-github-alt"></i></a></li>
-                            <?php endif; ?>
-                        </ul> 
-                    </div><!--//profile-->
-                </div><!--//col-->
-                <div class="col-12 col-md-auto">
-                    <div class="dark-mode-switch d-flex">
-                        <div class="form-check form-switch mx-auto mx-md-0">
-                            <input type="checkbox" class="form-check-input me-2" id="darkSwitch" />
-                            <label class="custom-control-label" for="darkSwitch">Dark Mode</label>
-                        </div>
-                    </div><!--//dark-mode-switch-->
-                    <a class="btn btn-cta-primary" href="index.php"><i class="fas fa-arrow-left"></i> Retour</a>        
-                </div><!--//col-->
-            </div><!--//row-->         
-        </div><!--//container-->
-    </header><!--//header-->
-    
-    <div class="container sections-wrapper py-5">
-        <div class="row">
-            <div class="primary col-lg-8 col-12">
-                <section class="project section">
-                    <div class="section-inner shadow-sm rounded">
-                        <h2 class="heading"><?php echo sanitizeOutput($project['title']); ?></h2>
-                        <?php if (!empty($project['image_url'])): ?>
-                        <div class="project-image mb-4">
-                            <img class="img-fluid rounded" src="<?php echo sanitizeOutput($project['image_url']); ?>" alt="<?php echo sanitizeOutput($project['title']); ?>" />
-                        </div>
-                        <?php endif; ?>
-                        <div class="content">
-                            <div class="project-description">
-                                <?php echo nl2br(sanitizeOutput($project['description'])); ?>
-                            </div>
-                            <?php if (!empty($project['project_url'])): ?>
-                            <div class="project-actions mt-4">
-                                <a href="<?php echo sanitizeOutput($project['project_url']); ?>" class="btn btn-primary" target="_blank">
-                                    <i class="fas fa-external-link-alt"></i> Voir le projet
-                                </a>
-                            </div>
-                            <?php endif; ?>
-                        </div><!--//content-->
-                    </div><!--//section-inner-->                 
-                </section><!--//section-->
-            </div><!--//primary-->
-            <div class="secondary col-lg-4 col-12">
-                <aside class="info aside section">
-                    <div class="section-inner shadow-sm rounded">
-                        <h2 class="heading sr-only">Informations du projet</h2>
-                        <div class="content">
-                            <ul class="list-unstyled">
-                                <li><i class="fas fa-calendar"></i><span class="sr-only">Date de création:</span><?php echo formatDate($project['created_at']); ?></li>
-                                <?php if ($project['is_featured']): ?>
-                                <li><i class="fas fa-star"></i><span class="sr-only">Statut:</span>Projet mis en avant</li>
-                                <?php endif; ?>
-                            </ul>
-                        </div><!--//content-->  
-                    </div><!--//section-inner-->                 
-                </aside><!--//aside-->
-            </div><!--//secondary-->    
-        </div><!--//row-->
-    </div><!--//masonry-->
-
-    <!-- Section Commentaires -->
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-lg-8">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3><i class="fas fa-comments"></i> Commentaires</h3>
-                    <span class="badge bg-primary" id="commentCount">0</span>
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="navbar-top scrolled" id="navbar">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a href="index.php" class="nav-brand">DK<span>.</span></a>
+            <div class="nav-links d-none d-md-flex">
+                <a href="index.php#projects">Projets</a>
+                <a href="index.php#skills">Compétences</a>
+                <a href="index.php#experience">Expérience</a>
+                <a href="index.php#contact">Contact</a>
+            </div>
+            <div class="nav-actions d-flex align-items-center gap-3">
+                <div class="form-check form-switch mb-0">
+                    <input type="checkbox" class="form-check-input" id="darkSwitch" />
+                    <label class="form-check-label" for="darkSwitch"><i class="fas fa-moon"></i></label>
                 </div>
-                
-                <?php if(!isUserLoggedIn()): ?>
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body text-center">
-                            <i class="fas fa-user-circle fa-3x text-muted mb-3"></i>
-                            <h5>Connectez-vous pour commenter</h5>
-                            <p class="text-muted">Rejoignez la discussion et partagez votre avis sur ce projet</p>
-                            <a href="login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" 
-                               class="btn btn-primary">
-                                <i class="fas fa-sign-in-alt"></i> Se connecter
+                <a class="btn btn-primary-custom btn-sm" href="index.php"><i class="fas fa-arrow-left"></i> Retour</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== PROJECT HERO ===== -->
+    <section class="project-hero">
+        <div class="project-hero-bg">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+        </div>
+        <div class="container">
+            <div class="project-hero-content">
+                <a href="index.php#projects" class="project-hero-back"><i class="fas fa-arrow-left"></i> Tous les projets</a>
+                <h1><?php echo sanitizeOutput($project['title']); ?></h1>
+                <div class="project-hero-meta">
+                    <?php if ($project['is_featured']): ?>
+                    <span class="project-meta-badge featured"><i class="fas fa-star"></i> Projet phare</span>
+                    <?php endif; ?>
+                    <span class="project-meta-badge"><i class="fas fa-calendar"></i> <?php echo formatDate($project['created_at']); ?></span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container project-main-wrapper">
+        <div class="row g-4">
+            <!-- Main content -->
+            <div class="col-lg-8">
+                <div class="project-detail-card">
+                    <?php if (!empty($project['image_url'])): ?>
+                    <div class="project-detail-image">
+                        <img class="img-fluid" src="<?php echo sanitizeOutput($project['image_url']); ?>" alt="<?php echo sanitizeOutput($project['title']); ?>" />
+                    </div>
+                    <?php endif; ?>
+                    <div class="project-detail-body">
+                        <h2 class="project-detail-heading">Description du projet</h2>
+                        <div class="project-detail-text">
+                            <?php echo nl2br(sanitizeOutput($project['description'])); ?>
+                        </div>
+                        <?php if (!empty($project['project_url'])): ?>
+                        <div class="project-detail-actions">
+                            <a href="<?php echo sanitizeOutput($project['project_url']); ?>" class="btn btn-primary-custom" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> Voir le projet en ligne
                             </a>
                         </div>
+                        <?php endif; ?>
                     </div>
-                <?php else: ?>
-                    <!-- Formulaire de commentaire -->
-                    <div class="card mb-4 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <img src="<?php echo $systemUrl; ?>assets/images/profile.png" class="rounded-circle me-2" width="40" height="40" alt="Avatar">
+                </div>
+
+                <!-- Comments Section -->
+                <div class="project-comments-section">
+                    <div class="project-comments-header">
+                        <h3><i class="fas fa-comments"></i> Commentaires</h3>
+                        <span class="comment-count-badge" id="commentCount">0</span>
+                    </div>
+                    
+                    <?php if(!isUserLoggedIn()): ?>
+                        <div class="comment-login-prompt">
+                            <div class="comment-login-icon"><i class="fas fa-user-circle"></i></div>
+                            <h5>Connectez-vous pour commenter</h5>
+                            <p>Rejoignez la discussion et partagez votre avis sur ce projet</p>
+                            <div class="d-flex gap-2 justify-content-center">
+                                <a href="login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-primary-custom">
+                                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                                </a>
+                                <a href="register.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-outline-primary-custom">
+                                    <i class="fas fa-user-plus"></i> S'inscrire
+                                </a>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <div class="comment-form-card">
+                            <div class="d-flex align-items-center mb-3 gap-2">
+                                <div class="comment-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
                                 <div>
                                     <h6 class="mb-0"><?php echo htmlspecialchars($_SESSION['username'] ?? 'Utilisateur'); ?></h6>
                                     <small class="text-muted">Connecté</small>
@@ -167,44 +152,35 @@ $locale = getDefaultLocale();
                                     <textarea class="form-control" id="commentContent" rows="3" 
                                               placeholder="Partagez votre avis sur ce projet..." required></textarea>
                                     <div class="d-flex justify-content-between align-items-center mt-2">
-                                        <div class="form-text">
-                                            <i class="fas fa-info-circle"></i> 
-                                            Votre commentaire sera visible par tous les visiteurs
-                                        </div>
-                                        <div class="text-muted">
-                                            <span id="charCount">0</span>/500 caractères
-                                        </div>
+                                        <small class="text-muted"><i class="fas fa-info-circle"></i> Visible par tous les visiteurs</small>
+                                        <small class="text-muted"><span id="charCount">0</span>/500</small>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-end">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary-custom">
                                         <i class="fas fa-paper-plane"></i> Publier
                                     </button>
                                 </div>
                             </form>
                         </div>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
 
-                <!-- Liste des commentaires -->
-                <div id="commentsList">
-                    <?php
-                    $comments = getProjectComments($db, $project['project_url']);
-                    if (empty($comments)): ?>
-                        <div class="card shadow-sm">
-                            <div class="card-body text-center py-5">
-                                <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                    <div id="commentsList">
+                        <?php
+                        $comments = getProjectComments($db, $project['project_url']);
+                        if (empty($comments)): ?>
+                            <div class="comment-empty-state">
+                                <i class="fas fa-comments"></i>
                                 <h5>Aucun commentaire pour le moment</h5>
-                                <p class="text-muted">Soyez le premier à partager votre avis sur ce projet !</p>
+                                <p>Soyez le premier à partager votre avis sur ce projet !</p>
                             </div>
-                        </div>
-                    <?php else: ?>
-                        <?php foreach ($comments as $comment): ?>
-                            <div class="card mb-3 shadow-sm comment-item" data-comment-id="<?php echo $comment['id']; ?>">
-                                <div class="card-body">
+                        <?php else: ?>
+                            <?php foreach ($comments as $comment): ?>
+                                <div class="comment-item-card" data-comment-id="<?php echo $comment['id']; ?>">
                                     <div class="d-flex align-items-center mb-3">
-                                        <img src="<?php echo $systemUrl; ?>assets/images/profile.png" 
-                                             class="rounded-circle me-2" width="40" height="40" alt="Avatar">
+                                        <div class="comment-avatar me-2">
+                                            <i class="fas fa-user"></i>
+                                        </div>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-0"><?php echo htmlspecialchars($comment['username']); ?></h6>
                                             <small class="text-muted">
@@ -214,7 +190,7 @@ $locale = getDefaultLocale();
                                         </div>
                                         <?php if (isUserLoggedIn() && $_SESSION['user_id'] == $comment['user_id']): ?>
                                         <div class="dropdown">
-                                            <button class="btn btn-link text-muted" type="button" data-bs-toggle="dropdown">
+                                            <button class="btn btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
@@ -232,9 +208,46 @@ $locale = getDefaultLocale();
                                         <?php echo nl2br(htmlspecialchars($comment['content'])); ?>
                                     </div>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="project-sidebar-card">
+                    <h4><i class="fas fa-info-circle"></i> Informations</h4>
+                    <div class="sidebar-info-list">
+                        <div class="sidebar-info-item">
+                            <span class="sidebar-info-label"><i class="fas fa-user"></i> Auteur</span>
+                            <span class="sidebar-info-value"><?php echo sanitizeOutput($profile['name'] ?? 'Donatien KANANE'); ?></span>
+                        </div>
+                        <div class="sidebar-info-item">
+                            <span class="sidebar-info-label"><i class="fas fa-calendar"></i> Date</span>
+                            <span class="sidebar-info-value"><?php echo formatDate($project['created_at']); ?></span>
+                        </div>
+                        <?php if ($project['is_featured']): ?>
+                        <div class="sidebar-info-item">
+                            <span class="sidebar-info-label"><i class="fas fa-star"></i> Statut</span>
+                            <span class="sidebar-info-value featured-text">Projet phare</span>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php if (!empty($project['project_url'])): ?>
+                    <a href="<?php echo sanitizeOutput($project['project_url']); ?>" class="btn btn-primary-custom w-100 mt-3" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Visiter le projet
+                    </a>
                     <?php endif; ?>
+                </div>
+
+                <div class="project-sidebar-card">
+                    <h4><i class="fas fa-share-alt"></i> Partager</h4>
+                    <div class="sidebar-share-links">
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($systemUrl . 'project.php?url=' . urlencode($project['project_url'])); ?>" target="_blank" class="share-btn linkedin" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($systemUrl . 'project.php?url=' . urlencode($project['project_url'])); ?>&text=<?php echo urlencode($project['title']); ?>" target="_blank" class="share-btn twitter" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="mailto:?subject=<?php echo urlencode($project['title']); ?>&body=<?php echo urlencode($systemUrl . 'project.php?url=' . urlencode($project['project_url'])); ?>" class="share-btn email" title="Email"><i class="fas fa-envelope"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -242,10 +255,13 @@ $locale = getDefaultLocale();
 
     <!-- ******FOOTER****** --> 
     <footer class="footer">
-        <div class="container text-center">
-            <small class="copyright">Designed with <span class="sr-only">love</span><i class="fas fa-heart"></i> by <a href="https://themes.3rdwavemedia.com" target="_blank">Xiaoying Riley</a> for developers</small>
-        </div><!--//container-->
-    </footer><!--//footer-->
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">DK<span>.</span></div>
+                <p class="footer-copy">&copy; <?php echo date('Y'); ?> Donatien KANANE. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
  
     <!-- Javascript -->          
     <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/plugins/popper.min.js"></script> 
@@ -273,7 +289,7 @@ $locale = getDefaultLocale();
         
         // Mise à jour du compteur de commentaires
         function updateCommentCount() {
-            const count = $('.comment-item').length;
+            const count = $('.comment-item-card').length;
             $('#commentCount').text(count);
         }
         updateCommentCount();
@@ -283,7 +299,7 @@ $locale = getDefaultLocale();
             e.preventDefault();
             
             const content = $('#commentContent').val().trim();
-            const projectUrl = '<?php echo $project['project_url']; ?>';
+            const projectUrl = <?php echo json_encode($project['project_url']); ?>;
             
             if (!content) {
                 showAlert('warning', 'Veuillez entrer un commentaire');
@@ -306,11 +322,11 @@ $locale = getDefaultLocale();
                     if (response.success) {
                         // Ajouter le nouveau commentaire en haut de la liste
                         const newComment = `
-                            <div class="card mb-3 shadow-sm comment-item" data-comment-id="${response.comment.id}">
-                                <div class="card-body">
+                            <div class="comment-item-card" data-comment-id="${response.comment.id}">
                                     <div class="d-flex align-items-center mb-3">
-                                        <img src="<?php echo $systemUrl; ?>assets/images/profile.png" 
-                                             class="rounded-circle me-2" width="40" height="40" alt="Avatar">
+                                        <div class="comment-avatar me-2">
+                                            <i class="fas fa-user"></i>
+                                        </div>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-0">${response.comment.username}</h6>
                                             <small class="text-muted">
@@ -318,7 +334,7 @@ $locale = getDefaultLocale();
                                             </small>
                                         </div>
                                         <div class="dropdown">
-                                            <button class="btn btn-link text-muted" type="button" data-bs-toggle="dropdown">
+                                            <button class="btn btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end">
@@ -334,12 +350,11 @@ $locale = getDefaultLocale();
                                     <div class="comment-content">
                                         ${response.comment.content}
                                     </div>
-                                </div>
                             </div>
                         `;
                         
                         // Supprimer le message "Aucun commentaire" s'il existe
-                        $('#commentsList .card:not(.comment-item)').remove();
+                        $('#commentsList .comment-empty-state').remove();
                         
                         // Ajouter le nouveau commentaire
                         $('#commentsList').prepend(newComment);
@@ -369,7 +384,7 @@ $locale = getDefaultLocale();
         // Gestion de la suppression des commentaires
         $(document).on('click', '.delete-comment', function() {
             const commentId = $(this).data('comment-id');
-            const commentElement = $(this).closest('.comment-item');
+            const commentElement = $(this).closest('.comment-item-card');
             
             if (!confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')) {
                 return;
@@ -391,14 +406,12 @@ $locale = getDefaultLocale();
                             updateCommentCount();
                             
                             // Si plus de commentaires, afficher le message
-                            if ($('.comment-item').length === 0) {
+                            if ($('.comment-item-card').length === 0) {
                                 $('#commentsList').html(`
-                                    <div class="card shadow-sm">
-                                        <div class="card-body text-center py-5">
-                                            <i class="fas fa-comments fa-3x text-muted mb-3"></i>
-                                            <h5>Aucun commentaire pour le moment</h5>
-                                            <p class="text-muted">Soyez le premier à partager votre avis sur ce projet !</p>
-                                        </div>
+                                    <div class="comment-empty-state">
+                                        <i class="fas fa-comments"></i>
+                                        <h5>Aucun commentaire pour le moment</h5>
+                                        <p>Soyez le premier à partager votre avis sur ce projet !</p>
                                     </div>
                                 `);
                             }

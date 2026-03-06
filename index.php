@@ -17,6 +17,8 @@ $systemUrl = getSystemUrl();
 $locale = getDefaultLocale();
 $projectCount = count($projects);
 $skillCount = count($skills);
+$projectStats = getAllProjectStats($db);
+$blogStats = getAllBlogStats($db);
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo substr($locale, 0, 2); ?>">
@@ -179,43 +181,43 @@ $skillCount = count($skills);
                         <div class="service-slide">
                             <div class="service-card">
                                 <div class="service-icon"><i class="fas fa-code"></i></div>
-                                <h3>Développement Web</h3>
-                                <p>Création d'applications web modernes et performantes avec PHP, Laravel, Bootstrap et les dernières technologies front-end.</p>
+                                <h3>Développement Web Full-Stack</h3>
+                                <p>Architecture d'applications web structurées et maintenables — PHP/Laravel, Python/Django, JavaScript — avec séparation claire des responsabilités et code documenté.</p>
                             </div>
                         </div>
                         <div class="service-slide">
                             <div class="service-card">
                                 <div class="service-icon"><i class="fas fa-database"></i></div>
-                                <h3>Bases de Données</h3>
-                                <p>Conception, optimisation et gestion de bases de données MySQL. Modélisation de données et requêtes SQL avancées.</p>
+                                <h3>Bases de Données & Modélisation</h3>
+                                <p>Conception de schémas relationnels évolutifs, requêtes optimisées via PDO préparé, migrations versionnées et intégrité référentielle garantie.</p>
                             </div>
                         </div>
                         <div class="service-slide">
                             <div class="service-card">
                                 <div class="service-icon"><i class="fas fa-chart-line"></i></div>
-                                <h3>Analyse de Données</h3>
-                                <p>Collecte, traitement et visualisation de données pour des prises de décisions stratégiques avec des outils modernes.</p>
+                                <h3>Data & Aide à la Décision</h3>
+                                <p>Collecte terrain (KOBO Collect), traitement statistique (SPSS) et tableaux de bord interactifs (Power BI) pour piloter des projets à impact social.</p>
                             </div>
                         </div>
                         <div class="service-slide">
                             <div class="service-card">
                                 <div class="service-icon"><i class="fas fa-mobile-alt"></i></div>
-                                <h3>Design Responsive</h3>
-                                <p>Interfaces adaptées à tous les appareils avec un design mobile-first et une expérience utilisateur optimale.</p>
+                                <h3>UI/UX Responsive</h3>
+                                <p>Interfaces mobile-first avec Bootstrap 5, progressive enhancement et accessibilité — pensées pour fonctionner sur les connexions et appareils d'Afrique Centrale.</p>
                             </div>
                         </div>
                         <div class="service-slide">
                             <div class="service-card">
                                 <div class="service-icon"><i class="fas fa-server"></i></div>
-                                <h3>API & Backend</h3>
-                                <p>Développement d'APIs RESTful robustes, intégration de services tiers et architecture backend scalable.</p>
+                                <h3>APIs & Architectures Évolutives</h3>
+                                <p>Conception d'APIs RESTful sécurisées, intégration de passerelles de paiement (Mobile Money, Stripe), architecture modulaire prête pour la montée en charge.</p>
                             </div>
                         </div>
                         <div class="service-slide">
                             <div class="service-card">
                                 <div class="service-icon"><i class="fas fa-heartbeat"></i></div>
-                                <h3>Santé & Tech</h3>
-                                <p>Solutions technologiques innovantes pour le secteur de la santé, combinant expertise biomédicale et développement.</p>
+                                <h3>Tech for Good & Santé</h3>
+                                <p>Solutions numériques pour le secteur humanitaire et la santé publique — marketplace médicale, suivi épidémiologique, outils de gestion pour ONG.</p>
                             </div>
                         </div>
                     </div>
@@ -306,6 +308,15 @@ $skillCount = count($skills);
                         <div class="featured-project-content">
                             <h3><?php echo sanitizeOutput($featured['title']); ?></h3>
                             <p><?php echo nl2br(sanitizeOutput($featured['description'])); ?></p>
+                            <div class="card-engagement">
+                                <?php
+                                    $fUrl = $featured['project_url'];
+                                    $fComments = $projectStats[$fUrl]['comments'] ?? 0;
+                                    $fLikes = $projectStats[$fUrl]['likes'] ?? 0;
+                                ?>
+                                <span class="engagement-badge" title="Commentaires"><i class="far fa-comment-dots"></i> <?php echo $fComments; ?></span>
+                                <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $fLikes; ?></span>
+                            </div>
                             <div class="d-flex gap-3 flex-wrap">
                                 <a href="<?php echo sanitizeOutput($featured['project_url']); ?>" class="btn btn-primary-custom" target="_blank"><i class="fas fa-external-link-alt"></i> Voir le projet</a>
                                 <a href="project.php?url=<?php echo urlencode($featured['project_url']); ?>" class="btn btn-outline-custom"><i class="fas fa-info-circle"></i> Détails</a>
@@ -334,6 +345,15 @@ $skillCount = count($skills);
                         <div class="project-card-body">
                             <h4><a href="project.php?url=<?php echo urlencode($proj['project_url']); ?>"><?php echo sanitizeOutput($proj['title']); ?></a></h4>
                             <p><?php echo mb_strimwidth(sanitizeOutput($proj['description']), 0, 120, '...'); ?></p>
+                            <div class="card-engagement">
+                                <?php
+                                    $pUrl = $proj['project_url'];
+                                    $pComments = $projectStats[$pUrl]['comments'] ?? 0;
+                                    $pLikes = $projectStats[$pUrl]['likes'] ?? 0;
+                                ?>
+                                <span class="engagement-badge" title="Commentaires"><i class="far fa-comment-dots"></i> <?php echo $pComments; ?></span>
+                                <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $pLikes; ?></span>
+                            </div>
                             <a href="project.php?url=<?php echo urlencode($proj['project_url']); ?>" class="project-link"><i class="fas fa-arrow-right"></i> En savoir plus</a>
                         </div>
                     </div>
@@ -383,7 +403,7 @@ $skillCount = count($skills);
                         <div class="education-icon"><i class="fas fa-university"></i></div>
                         <div class="education-info">
                             <h4>Licence en Sciences Biomédicales</h4>
-                            <p class="education-school">Université de Goma</p>
+                            <p class="education-school">Université de Goma — Formation alliant rigueur scientifique et approche terrain, fondement de mon expertise data & santé</p>
                             <span class="education-year">2021 — 2024</span>
                         </div>
                     </div>
@@ -393,7 +413,7 @@ $skillCount = count($skills);
                         <div class="education-icon"><i class="fas fa-school"></i></div>
                         <div class="education-info">
                             <h4>Diplôme d'État en Scientifique</h4>
-                            <p class="education-school">Institut Isidore Bakanja</p>
+                            <p class="education-school">Institut Isidore Bakanja — Bases solides en sciences exactes et méthodologie analytique</p>
                             <span class="education-year">2016 — 2021</span>
                         </div>
                     </div>
@@ -439,6 +459,14 @@ $skillCount = count($skills);
                             </div>
                             <h3><a href="blog.php?slug=<?php echo urlencode($featuredPost['slug']); ?>"><?php echo sanitizeOutput($featuredPost['title']); ?></a></h3>
                             <p><?php echo sanitizeOutput($featuredPost['excerpt']); ?></p>
+                            <div class="card-engagement">
+                                <?php
+                                    $bComments = $blogStats[$featuredPost['slug']]['comments'] ?? 0;
+                                    $bLikes = $blogStats[$featuredPost['slug']]['likes'] ?? 0;
+                                ?>
+                                <span class="engagement-badge" title="Commentaires"><i class="far fa-comment-dots"></i> <?php echo $bComments; ?></span>
+                                <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $bLikes; ?></span>
+                            </div>
                             <a href="blog.php?slug=<?php echo urlencode($featuredPost['slug']); ?>" class="btn btn-primary-custom btn-sm">
                                 <i class="fas fa-arrow-right"></i> Lire l'article
                             </a>
@@ -464,6 +492,14 @@ $skillCount = count($skills);
                             </div>
                             <h4><a href="blog.php?slug=<?php echo urlencode($post['slug']); ?>"><?php echo sanitizeOutput($post['title']); ?></a></h4>
                             <p><?php echo mb_strimwidth(sanitizeOutput($post['excerpt']), 0, 150, '...'); ?></p>
+                            <div class="card-engagement">
+                                <?php
+                                    $bC = $blogStats[$post['slug']]['comments'] ?? 0;
+                                    $bL = $blogStats[$post['slug']]['likes'] ?? 0;
+                                ?>
+                                <span class="engagement-badge" title="Commentaires"><i class="far fa-comment-dots"></i> <?php echo $bC; ?></span>
+                                <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $bL; ?></span>
+                            </div>
                             <a href="blog.php?slug=<?php echo urlencode($post['slug']); ?>" class="blog-read-more">
                                 Lire la suite <i class="fas fa-arrow-right"></i>
                             </a>
@@ -511,9 +547,10 @@ $skillCount = count($skills);
     <section class="section-block contact-section" id="contact">
         <div class="container">
             <div class="section-title text-center">
-                <span class="section-subtitle">Parlons ensemble</span>
+                <span class="section-subtitle">Collaborons ensemble</span>
                 <h2>Me Contacter</h2>
                 <div class="title-line"></div>
+                <p class="section-description">Disponible pour des missions freelance, des collaborations à distance ou des projets à impact social. N'hésitez pas à me contacter.</p>
             </div>
             <div class="row justify-content-center g-4">
                 <div class="col-md-4">
@@ -528,6 +565,7 @@ $skillCount = count($skills);
                         <div class="contact-card-icon"><i class="fas fa-map-marker-alt"></i></div>
                         <h4>Localisation</h4>
                         <p><?php echo sanitizeOutput($profile['location'] ?? 'Goma, RDC'); ?></p>
+                        <small class="text-muted">Disponible en remote</small>
                     </div>
                 </div>
                 <div class="col-md-4">

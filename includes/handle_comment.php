@@ -1,5 +1,6 @@
 <?php
 session_start();
+header('Content-Type: application/json');
 require_once '../config.php';
 require_once 'Database.php';
 require_once 'functions.php';
@@ -21,12 +22,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 // Récupérer les données
 $data = json_decode(file_get_contents('php://input'), true);
 $project_url = $data['project_url'] ?? '';
+$blog_slug = $data['blog_slug'] ?? '';
 $content = $data['content'] ?? '';
+$parent_id = isset($data['parent_id']) ? (int)$data['parent_id'] : null;
 
 // Valider les données
-if (empty($project_url) || empty($content)) {
+if ((empty($project_url) && empty($blog_slug)) || empty($content)) {
     http_response_code(400);
     echo json_encode(['error' => 'Données manquantes']);
+    exit;
+}
+
+if (mb_strlen($content) > 1000) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Commentaire trop long (max 1000 caractères)']);
     exit;
 }
 
@@ -35,20 +44,28 @@ $database = new Database();
 $db = $database->getConnection();
 
 // Ajouter le commentaire
-$success = addProjectComment($db, $project_url, $_SESSION['user_id'], $content);
+if (!empty($blog_slug)) {
+    $success = addBlogComment($db, $blog_slug, $_SESSION['user_id'], $content, $parent_id);
+} else {
+    $success = addProjectComment($db, $project_url, $_SESSION['user_id'], $content, $parent_id);
+}
 
 if ($success) {
     // Récupérer le nouveau commentaire
-    $comments = getProjectComments($db, $project_url);
-    $newComment = $comments[0]; // Le plus récent
+    $stmt = $db->prepare("SELECT c.*, u.username FROM comments c JOIN users u ON c.user_id = u.id WHERE c.id = :id");
+    $stmt->execute([':id' => $db->lastInsertId()]);
+    $newComment = $stmt->fetch(PDO::FETCH_ASSOC);
     
     echo json_encode([
         'success' => true,
         'comment' => [
             'id' => $newComment['id'],
-            'content' => htmlspecialchars($newComment['content']),
-            'username' => htmlspecialchars($newComment['username']),
-            'created_at' => date('d/m/Y H:i', strtotime($newComment['created_at']))
+            'parent_id' => $newComment['parent_id'],
+            'content' => $newComment['content'],
+            'username' => $newComment['username'],
+            'created_at' => $newComment['created_at'],
+            'likes_count' => 0,
+            'user_liked' => false
         ]
     ]);
 } else {

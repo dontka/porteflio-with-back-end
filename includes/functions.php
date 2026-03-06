@@ -151,22 +151,58 @@ function isUserLoggedIn() {
 }
 
 /**
- * Récupère les commentaires d'un projet
+ * Récupère les commentaires d'un projet avec likes et structure thread
  * @param PDO $db Instance de connexion PDO
  * @param string $project_url URL du projet
- * @return array Liste des commentaires
+ * @param int|null $current_user_id ID utilisateur courant (pour user_liked)
+ * @return array Liste des commentaires threadés
  */
-function getProjectComments($db, $project_url) {
+function getProjectComments($db, $project_url, $current_user_id = null) {
     try {
-        $query = "SELECT c.*, u.username 
+        $query = "SELECT c.*, u.username,
+                 (SELECT COUNT(*) FROM comment_likes cl WHERE cl.comment_id = c.id) AS likes_count
                  FROM comments c 
                  JOIN users u ON c.user_id = u.id 
                  WHERE c.project_url = :project_url 
-                 ORDER BY c.created_at DESC";
+                 ORDER BY c.created_at ASC";
         $stmt = $db->prepare($query);
         $stmt->bindParam(':project_url', $project_url);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $all = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Check user likes
+        $userLikes = [];
+        if ($current_user_id) {
+            $lq = $db->prepare("SELECT comment_id FROM comment_likes WHERE user_id = :uid");
+            $lq->execute([':uid' => $current_user_id]);
+            $userLikes = array_column($lq->fetchAll(PDO::FETCH_ASSOC), 'comment_id');
+        }
+
+        foreach ($all as &$c) {
+            $c['user_liked'] = in_array($c['id'], $userLikes);
+        }
+
+        // Build thread tree
+        $tree = [];
+        $map = [];
+        foreach ($all as $c) {
+            $c['replies'] = [];
+            $map[$c['id']] = $c;
+        }
+        foreach ($map as $id => $c) {
+            if ($c['parent_id'] && isset($map[$c['parent_id']])) {
+                $map[$c['parent_id']]['replies'][] = &$map[$id];
+            } else {
+                $tree[] = &$map[$id];
+            }
+        }
+
+        // Sort root comments newest first
+        usort($tree, function($a, $b) {
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
+        });
+
+        return $tree;
     } catch(PDOException $e) {
         if(DEBUGGING) {
             echo "Erreur : " . $e->getMessage();
@@ -176,20 +212,109 @@ function getProjectComments($db, $project_url) {
 }
 
 /**
- * Ajoute un commentaire à un projet
- * @param PDO $db Instance de connexion PDO
- * @param string $project_url URL du projet
- * @param int $user_id ID de l'utilisateur
- * @param string $content Contenu du commentaire
- * @return bool True si le commentaire a été ajouté
+ * Compte le total des commentaires d'un projet
  */
-function addProjectComment($db, $project_url, $user_id, $content) {
+function countProjectComments($db, $project_url) {
+    $stmt = $db->prepare("SELECT COUNT(*) FROM comments WHERE project_url = :url");
+    $stmt->execute([':url' => $project_url]);
+    return (int)$stmt->fetchColumn();
+}
+
+/**
+ * Ajoute un commentaire à un projet (avec support parent_id pour les réponses)
+ */
+function addProjectComment($db, $project_url, $user_id, $content, $parent_id = null) {
     try {
-        $query = "INSERT INTO comments (project_url, user_id, content) 
-                 VALUES (:project_url, :user_id, :content)";
+        $query = "INSERT INTO comments (project_url, parent_id, user_id, content) 
+                 VALUES (:project_url, :parent_id, :user_id, :content)";
         $stmt = $db->prepare($query);
         $stmt->bindParam(':project_url', $project_url);
-        $stmt->bindParam(':user_id', $user_id);
+        $stmt->bindParam(':parent_id', $parent_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindParam(':content', $content);
+        return $stmt->execute();
+    } catch(PDOException $e) {
+        if(DEBUGGING) {
+            echo "Erreur : " . $e->getMessage();
+        }
+        return false;
+    }
+}
+
+/**
+ * Récupère les commentaires d'un article de blog avec likes et structure thread
+ */
+function getBlogComments($db, $blog_slug, $current_user_id = null) {
+    try {
+        $query = "SELECT c.*, u.username,
+                 (SELECT COUNT(*) FROM comment_likes cl WHERE cl.comment_id = c.id) AS likes_count
+                 FROM comments c 
+                 JOIN users u ON c.user_id = u.id 
+                 WHERE c.blog_slug = :blog_slug 
+                 ORDER BY c.created_at ASC";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':blog_slug', $blog_slug);
+        $stmt->execute();
+        $all = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $userLikes = [];
+        if ($current_user_id) {
+            $lq = $db->prepare("SELECT comment_id FROM comment_likes WHERE user_id = :uid");
+            $lq->execute([':uid' => $current_user_id]);
+            $userLikes = array_column($lq->fetchAll(PDO::FETCH_ASSOC), 'comment_id');
+        }
+
+        foreach ($all as &$c) {
+            $c['user_liked'] = in_array($c['id'], $userLikes);
+        }
+
+        $tree = [];
+        $map = [];
+        foreach ($all as $c) {
+            $c['replies'] = [];
+            $map[$c['id']] = $c;
+        }
+        foreach ($map as $id => $c) {
+            if ($c['parent_id'] && isset($map[$c['parent_id']])) {
+                $map[$c['parent_id']]['replies'][] = &$map[$id];
+            } else {
+                $tree[] = &$map[$id];
+            }
+        }
+
+        usort($tree, function($a, $b) {
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
+        });
+
+        return $tree;
+    } catch(PDOException $e) {
+        if(DEBUGGING) {
+            echo "Erreur : " . $e->getMessage();
+        }
+        return [];
+    }
+}
+
+/**
+ * Compte le total des commentaires d'un article de blog
+ */
+function countBlogComments($db, $blog_slug) {
+    $stmt = $db->prepare("SELECT COUNT(*) FROM comments WHERE blog_slug = :slug");
+    $stmt->execute([':slug' => $blog_slug]);
+    return (int)$stmt->fetchColumn();
+}
+
+/**
+ * Ajoute un commentaire à un article de blog
+ */
+function addBlogComment($db, $blog_slug, $user_id, $content, $parent_id = null) {
+    try {
+        $query = "INSERT INTO comments (blog_slug, parent_id, user_id, content) 
+                 VALUES (:blog_slug, :parent_id, :user_id, :content)";
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':blog_slug', $blog_slug);
+        $stmt->bindParam(':parent_id', $parent_id, PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $stmt->bindParam(':content', $content);
         return $stmt->execute();
     } catch(PDOException $e) {
@@ -240,5 +365,90 @@ function getBlogPost($db, $slug) {
         }
         return null;
     }
+}
+
+/**
+ * Edit a comment (only by its author, within content limits)
+ */
+function editComment($db, $comment_id, $user_id, $content) {
+    $stmt = $db->prepare("UPDATE comments SET content = :content, updated_at = NOW() WHERE id = :id AND user_id = :uid");
+    return $stmt->execute([':content' => $content, ':id' => $comment_id, ':uid' => $user_id]);
+}
+
+/**
+ * Toggle like on a comment
+ * @return array ['liked' => bool, 'count' => int]
+ */
+function toggleCommentLike($db, $comment_id, $user_id) {
+    // Check if already liked
+    $check = $db->prepare("SELECT id FROM comment_likes WHERE comment_id = :cid AND user_id = :uid");
+    $check->execute([':cid' => $comment_id, ':uid' => $user_id]);
+    
+    if ($check->fetch()) {
+        $db->prepare("DELETE FROM comment_likes WHERE comment_id = :cid AND user_id = :uid")
+           ->execute([':cid' => $comment_id, ':uid' => $user_id]);
+        $liked = false;
+    } else {
+        $db->prepare("INSERT INTO comment_likes (comment_id, user_id) VALUES (:cid, :uid)")
+           ->execute([':cid' => $comment_id, ':uid' => $user_id]);
+        $liked = true;
+    }
+    
+    $count = $db->prepare("SELECT COUNT(*) FROM comment_likes WHERE comment_id = :cid");
+    $count->execute([':cid' => $comment_id]);
+    
+    return ['liked' => $liked, 'count' => (int)$count->fetchColumn()];
+}
+
+/**
+ * Récupère les stats (commentaires + likes) de tous les projets en une seule requête
+ * @return array ['project_url' => ['comments' => int, 'likes' => int]]
+ */
+function getAllProjectStats($db) {
+    $stats = [];
+    try {
+        $query = "SELECT c.project_url,
+                         COUNT(DISTINCT c.id) AS comments,
+                         COUNT(DISTINCT cl.id) AS likes
+                  FROM comments c
+                  LEFT JOIN comment_likes cl ON cl.comment_id = c.id
+                  WHERE c.project_url IS NOT NULL
+                  GROUP BY c.project_url";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $stats[$row['project_url']] = [
+                'comments' => (int)$row['comments'],
+                'likes' => (int)$row['likes']
+            ];
+        }
+    } catch(PDOException $e) {}
+    return $stats;
+}
+
+/**
+ * Récupère les stats (commentaires + likes) de tous les articles de blog en une seule requête
+ * @return array ['slug' => ['comments' => int, 'likes' => int]]
+ */
+function getAllBlogStats($db) {
+    $stats = [];
+    try {
+        $query = "SELECT c.blog_slug,
+                         COUNT(DISTINCT c.id) AS comments,
+                         COUNT(DISTINCT cl.id) AS likes
+                  FROM comments c
+                  LEFT JOIN comment_likes cl ON cl.comment_id = c.id
+                  WHERE c.blog_slug IS NOT NULL
+                  GROUP BY c.blog_slug";
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $stats[$row['blog_slug']] = [
+                'comments' => (int)$row['comments'],
+                'likes' => (int)$row['likes']
+            ];
+        }
+    } catch(PDOException $e) {}
+    return $stats;
 }
 ?> 

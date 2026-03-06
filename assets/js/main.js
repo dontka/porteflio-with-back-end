@@ -55,10 +55,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typedEl) {
         const phrases = [
             'Développeur Web Full-Stack',
-            'Analyste de Données',
-            'Passionné de Santé & Tech',
-            'Développeur PHP / Laravel',
-            'Créateur d\'applications Web'
+            'Data Analyst & BI',
+            'Architecte de Solutions Digitales',
+            'Tech for Social Impact',
+            'Développeur PHP / Python / Laravel',
+            'Collaborateur Remote & Open Source'
         ];
         var phraseIndex = 0;
         var charIndex = 0;

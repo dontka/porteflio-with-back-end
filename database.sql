@@ -73,14 +73,27 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Création de la table comments
--- Stocke les commentaires des projets
+-- Stocke les commentaires des projets (avec support des réponses imbriquées)
 CREATE TABLE IF NOT EXISTS comments (
-    id INT PRIMARY KEY AUTO_INCREMENT,        -- Identifiant unique auto-incrémenté
-    project_url VARCHAR(255) NOT NULL,        -- URL du projet commenté
-    user_id INT NOT NULL,                     -- ID de l'utilisateur
-    content TEXT NOT NULL,                    -- Contenu du commentaire
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Date de création
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE -- Clé étrangère vers users
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    project_url VARCHAR(255) NOT NULL,
+    parent_id INT DEFAULT NULL,               -- NULL = commentaire racine, sinon = réponse
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
+);
+
+-- Table des likes sur les commentaires
+CREATE TABLE IF NOT EXISTS comment_likes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    comment_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_like (comment_id, user_id),
+    FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- Insertion des catégories de compétences
@@ -93,8 +106,8 @@ INSERT INTO categories (name, description) VALUES
 INSERT INTO profile (name, title, description, location, email, website, github_username, linkedin_url, twitter_url) VALUES
 (
     'Donatien TUMAINI KANANE',
-    'Développeur Web Full-Stack & Analyste de Données',
-    'Développeur web passionné et analyste de données basé à Goma, RDC. Diplômé en Sciences Biomédicales de l''Université de Goma, je combine mes compétences en développement web (PHP, Python, Django, Kotlin) avec une expertise en collecte et analyse de données (SPSS, Power BI, KOBO Collect). Je crée des solutions numériques innovantes pour les organisations humanitaires, les ONG et le secteur de la santé en Afrique Centrale.',
+    'Développeur Web Full-Stack & Data Analyst',
+    'Développeur full-stack et analyste de données basé à Goma, RDC. Je conçois des architectures web modulaires et évolutives (PHP/Laravel, Python/Django, MySQL) et je transforme les données terrain en indicateurs décisionnels (Power BI, SPSS, KOBO Collect). Diplômé en Sciences Biomédicales, je mets la technologie au service de l\'impact social — santé publique, organisations humanitaires et ONG en Afrique Centrale. Habitué au travail collaboratif à distance et à la communication technique asynchrone.',
     'Goma, RDC',
     'donatienkanane@gmail.com',
     'http://schor.alwaysdata.net',
@@ -129,12 +142,12 @@ INSERT INTO skills (name, level, category) VALUES
 
 -- Insertion de l'expérience professionnelle
 INSERT INTO experience (title, company, location, start_date, end_date, description) VALUES
-('Développeur Web Freelance', 'Afiatalk', 'Goma, RDC', '2023-01-01', NULL, 'Développement et maintenance de plateformes web. Création de solutions numériques innovantes pour le secteur de la santé et de la communication.'),
-('Secrétaire Département Recherche', 'Medical Student Association (MSA/Nord-Kivu)', 'Goma, RDC', '2023-01-01', NULL, 'Coordination du département de recherche et échange. Organisation de formations en recherche, collecte et analyse de données.'),
-('Volontaire Programme FIKIRI', 'PNUD', 'Goma, RDC', '2025-01-01', NULL, 'Vulgarisation de la plateforme FIKIRI visant à identifier, cartographier et expérimenter des solutions innovantes pour accélérer les ODD.'),
-('Enquêteur et Encodeur de Données', 'Bio Grandlac Nord-Kivu', 'Goma, RDC', '2024-04-01', '2025-01-31', 'Collecte de données terrain, encodage et traitement des informations pour des projets de recherche en santé publique.'),
-('Encodeur et Analyste de Données', 'CREHP', 'Goma, RDC', '2024-01-01', '2024-12-31', 'Encodage et analyse des données de recherche au sein du Center of Research Expertise and Health Promotion.'),
-('Sensibilisateur Prévention Abus Sexuels', 'Heal Africa', 'Masisi, RDC', '2021-01-01', '2022-12-31', 'Sensibilisation communautaire dans le projet de Prévention et Abus Sexuels dans le territoire de Masisi.');
+('Développeur Web Full-Stack — Freelance', 'Afiatalk', 'Goma, RDC (Remote)', '2023-01-01', NULL, 'Conception et développement de plateformes web pour le secteur santé et communication. Travail à distance avec gestion de versions Git, revues de code asynchrones et déploiement continu. Technologies : PHP/Laravel, MySQL, Bootstrap, API REST.'),
+('Secrétaire Dépt. Recherche & Échange', 'Medical Student Association (MSA/Nord-Kivu)', 'Goma, RDC', '2023-01-01', NULL, 'Coordination des activités de recherche et formation en collecte/analyse de données. Mise en place de protocoles de recherche, rédaction technique, encadrement méthodologique des équipes terrain.'),
+('Volontaire Programme FIKIRI', 'PNUD', 'Goma, RDC', '2025-01-01', NULL, 'Vulgarisation de la plateforme FIKIRI (PNUD) pour l\'identification et l\'expérimentation de solutions innovantes accélérant les ODD. Sensibilisation communautaire et documentation technique des processus.'),
+('Enquêteur & Encodeur de Données', 'Bio Grandlac Nord-Kivu', 'Goma, RDC', '2024-04-01', '2025-01-31', 'Collecte de données terrain via KOBO Collect, encodage structuré et contrôle qualité des datasets. Collaboration à distance avec les équipes d\'analyse pour les projets de santé publique.'),
+('Encodeur & Analyste de Données', 'CREHP', 'Goma, RDC', '2024-01-01', '2024-12-31', 'Encodage, nettoyage et analyse de données de recherche (SPSS, Power BI) au Center of Research Expertise and Health Promotion. Production de tableaux de bord et rapports pour les partenaires.'),
+('Sensibilisateur Prévention Abus Sexuels', 'Heal Africa', 'Masisi, RDC', '2021-01-01', '2022-12-31', 'Sensibilisation communautaire dans le projet de prévention des violences sexuelles en territoire de Masisi. Travail de terrain en zone de conflit, communication interculturelle, collecte de données d\'impact.');
 
 -- Insertion d'un utilisateur administrateur
 INSERT INTO users (username, email, password) VALUES

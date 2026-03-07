@@ -138,7 +138,12 @@ INSERT INTO skills (name, level, category) VALUES
 ('Kotlin', 70, 'Back-end'),
 ('Power BI & Analyse de données', 85, 'Outils'),
 ('KOBO Collect & SPSS', 88, 'Outils'),
-('Git & GitHub', 85, 'Outils');
+('Git & GitHub', 85, 'Outils'),
+('Docker & Containers', 75, 'Back-end'),
+('Linux & Administration Serveur', 78, 'Back-end'),
+('CI/CD & GitHub Actions', 72, 'Back-end'),
+('AWS & Cloud Computing', 68, 'Back-end'),
+('Nginx & Apache', 80, 'Back-end');
 
 -- Insertion de l'expérience professionnelle
 INSERT INTO experience (title, company, location, start_date, end_date, description) VALUES

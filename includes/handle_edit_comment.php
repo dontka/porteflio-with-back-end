@@ -1,7 +1,7 @@
 <?php
+require_once '../config.php';
 session_start();
 header('Content-Type: application/json');
-require_once '../config.php';
 require_once 'Database.php';
 require_once 'functions.php';
 
@@ -47,7 +47,7 @@ if (!$comment) {
     exit;
 }
 
-if ($comment['user_id'] != $_SESSION['user_id']) {
+if ((int)$comment['user_id'] !== (int)$_SESSION['user_id']) {
     http_response_code(403);
     echo json_encode(['error' => 'Non autorisé']);
     exit;

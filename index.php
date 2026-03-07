@@ -1,5 +1,6 @@
 <?php
 require_once 'config.php';
+session_start();
 require_once 'includes/Database.php';
 require_once 'includes/functions.php';
 
@@ -19,47 +20,104 @@ $projectCount = count($projects);
 $skillCount = count($skills);
 $projectStats = getAllProjectStats($db);
 $blogStats = getAllBlogStats($db);
+
+$pageTitle = 'Donatien KANANE — Développeur Full-Stack & Data Analyst';
+$pageDescription = sanitizeOutput($profile['description'] ?? 'Portfolio de Donatien KANANE - Développeur Web Full-Stack & Analyste de Données basé à Goma, RDC');
+$pageUrl = $systemUrl;
+$pageImage = $systemUrl . 'assets/images/profile.png';
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo substr($locale, 0, 2); ?>">
 <head>
-    <title><?php echo $debugMode ? '[DEBUG] ' : ''; ?>Donatien KANANE — Développeur Full-Stack & Data Analyst</title>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php echo sanitizeOutput($profile['description'] ?? 'Portfolio de Donatien KANANE - Développeur Web Full-Stack & Analyste de Données'); ?>">
+    <title><?php echo $pageTitle; ?></title>
+    <meta name="description" content="<?php echo $pageDescription; ?>">
     <meta name="author" content="<?php echo sanitizeOutput($profile['name'] ?? 'Donatien KANANE'); ?>">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="canonical" href="<?php echo $pageUrl; ?>">
+    <link rel="alternate" hreflang="fr" href="<?php echo $pageUrl; ?>">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="<?php echo $pageTitle; ?>">
+    <meta property="og:description" content="<?php echo $pageDescription; ?>">
+    <meta property="og:url" content="<?php echo $pageUrl; ?>">
+    <meta property="og:image" content="<?php echo $pageImage; ?>">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:site_name" content="Donatien KANANE Portfolio">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo $pageTitle; ?>">
+    <meta name="twitter:description" content="<?php echo $pageDescription; ?>">
+    <meta name="twitter:image" content="<?php echo $pageImage; ?>">
+
     <link rel="shortcut icon" href="favicon.ico">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
-    <script defer src="<?php echo $systemUrl; ?>assets/fontawesome/js/all.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/plugins/github-calendar/dist/github-calendar-responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/2.0.2/octicons.min.css">
-    <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/plugins/github-activity/src/github-activity.css">
-    <link id="theme-style" rel="stylesheet" href="<?php echo $systemUrl; ?>assets/css/styles.css">
+    <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/plugins/github-activity/src/github-activity.min.css">
+    <link id="theme-style" rel="stylesheet" href="<?php echo $systemUrl; ?>assets/css/styles.min.css?v=<?php echo time(); ?>">
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "<?php echo sanitizeOutput($profile['name'] ?? 'Donatien KANANE'); ?>",
+        "jobTitle": "<?php echo sanitizeOutput($profile['title'] ?? 'Développeur Web Full-Stack & Data Analyst'); ?>",
+        "url": "<?php echo $pageUrl; ?>",
+        "image": "<?php echo $pageImage; ?>",
+        "description": "<?php echo $pageDescription; ?>",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "<?php echo sanitizeOutput($profile['location'] ?? 'Goma, RDC'); ?>"
+        },
+        "email": "<?php echo sanitizeOutput($profile['email'] ?? ''); ?>"
+        <?php if (!empty($profile['github_username'])): ?>
+        ,"sameAs": [
+            "https://github.com/<?php echo sanitizeOutput($profile['github_username']); ?>"
+            <?php if (!empty($profile['linkedin_url'])): ?>,"<?php echo sanitizeOutput($profile['linkedin_url']); ?>"<?php endif; ?>
+        ]
+        <?php endif; ?>
+    }
+    </script>
 </head>
 
 <body>
 
+    <!-- Skip Navigation -->
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
     <!-- ===== NAVIGATION ===== -->
-    <nav class="navbar-top" id="navbar">
+    <nav class="navbar-top" id="navbar" aria-label="Navigation principale">
         <div class="container d-flex align-items-center justify-content-between">
             <a href="#" class="nav-brand">DK<span>.</span></a>
-            <div class="nav-links d-none d-md-flex">
-                <a href="#hero">Accueil</a>
-                <a href="#about">À propos</a>
-                <a href="#services">Services</a>
-                <a href="#projects">Projets</a>
-                <a href="#skills">Compétences</a>
-                <a href="#experience">Expérience</a>
-                <a href="#blog">Blog</a>
-                <a href="#contact">Contact</a>
-            </div>
+            <ul class="nav-links d-none d-md-flex" role="menubar">
+                <li role="none"><a href="#hero" role="menuitem">Accueil</a></li>
+                <li role="none"><a href="#about" role="menuitem">À propos</a></li>
+                <li role="none"><a href="#services" role="menuitem">Services</a></li>
+                <li role="none"><a href="#stack" role="menuitem">Stack</a></li>
+                <li role="none"><a href="#projects" role="menuitem">Projets</a></li>
+                <li role="none"><a href="#skills" role="menuitem">Compétences</a></li>
+                <li role="none"><a href="#experience" role="menuitem">Expérience</a></li>
+                <li role="none"><a href="#blog" role="menuitem">Blog</a></li>
+                <li role="none"><a href="#contact" role="menuitem">Contact</a></li>
+            </ul>
             <div class="nav-actions d-flex align-items-center gap-3">
                 <div class="form-check form-switch mb-0">
-                    <input type="checkbox" class="form-check-input" id="darkSwitch" />
+                    <input type="checkbox" class="form-check-input" id="darkSwitch" aria-label="Activer le mode sombre" />
                     <label class="form-check-label" for="darkSwitch"><i class="fas fa-moon"></i></label>
                 </div>
                 <button class="nav-toggle d-md-none" id="navToggle" aria-label="Toggle navigation">
@@ -72,6 +130,7 @@ $blogStats = getAllBlogStats($db);
             <a href="#hero">Accueil</a>
             <a href="#about">À propos</a>
             <a href="#services">Services</a>
+            <a href="#stack">Stack</a>
             <a href="#projects">Projets</a>
             <a href="#skills">Compétences</a>
             <a href="#experience">Expérience</a>
@@ -79,6 +138,8 @@ $blogStats = getAllBlogStats($db);
             <a href="#contact">Contact</a>
         </div>
     </nav>
+
+    <main id="main-content">
 
     <!-- ===== HERO SECTION ===== -->
     <section class="hero" id="hero">
@@ -111,24 +172,53 @@ $blogStats = getAllBlogStats($db);
 
 
                     
-                    <div class="hero-socials">
-                        <?php if (!empty($profile['github_username'])): ?>
-                        <a href="https://github.com/<?php echo sanitizeOutput($profile['github_username']); ?>" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
-                        <?php endif; ?>
+                    <!-- Contact Buttons (badges) -->
+                    <div class="hero-contact-badges">
                         <?php if (!empty($profile['linkedin_url'])): ?>
-                        <a href="<?php echo sanitizeOutput($profile['linkedin_url']); ?>" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="<?php echo sanitizeOutput($profile['linkedin_url']); ?>" target="_blank" rel="noopener noreferrer">
+                            <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" loading="lazy" height="30">
+                        </a>
+                        <?php endif; ?>
+                        <?php if (!empty($profile['github_username'])): ?>
+                        <a href="https://github.com/<?php echo sanitizeOutput($profile['github_username']); ?>" target="_blank" rel="noopener noreferrer">
+                            <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" loading="lazy" height="30">
+                        </a>
+                        <?php endif; ?>
+                        <?php if (!empty($profile['email'])): ?>
+                        <a href="mailto:<?php echo sanitizeOutput($profile['email']); ?>">
+                            <img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" loading="lazy" height="30">
+                        </a>
                         <?php endif; ?>
                         <?php if (!empty($profile['twitter_url'])): ?>
-                        <a href="<?php echo sanitizeOutput($profile['twitter_url']); ?>" target="_blank" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="<?php echo sanitizeOutput($profile['twitter_url']); ?>" target="_blank" rel="noopener noreferrer">
+                            <img src="https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter" loading="lazy" height="30">
+                        </a>
+                        <?php endif; ?>
+                        <?php if (!empty($profile['website'])): ?>
+                        <a href="<?php echo sanitizeOutput($profile['website']); ?>" target="_blank" rel="noopener noreferrer">
+                            <img src="https://img.shields.io/badge/Website-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Website" loading="lazy" height="30">
+                        </a>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="hero-socials">
+                        <?php if (!empty($profile['github_username'])): ?>
+                        <a href="https://github.com/<?php echo sanitizeOutput($profile['github_username']); ?>" target="_blank" rel="noopener noreferrer" title="GitHub" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                        <?php endif; ?>
+                        <?php if (!empty($profile['linkedin_url'])): ?>
+                        <a href="<?php echo sanitizeOutput($profile['linkedin_url']); ?>" target="_blank" rel="noopener noreferrer" title="LinkedIn" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <?php endif; ?>
+                        <?php if (!empty($profile['twitter_url'])): ?>
+                        <a href="<?php echo sanitizeOutput($profile['twitter_url']); ?>" target="_blank" rel="noopener noreferrer" title="Twitter" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
                         <?php endif; ?>
                         <?php if (!empty($profile['email'])): ?>
                         <a href="mailto:<?php echo sanitizeOutput($profile['email']); ?>" title="Email"><i class="fas fa-envelope"></i></a>
                         <?php endif; ?>
                     </div>
                 </div>
-                <div class="col-lg-5 hero-image-col d-none d-lg-block">
+                <div class="col-lg-5 hero-image-col d-block">
                     <div class="hero-image-wrapper">
-                        <img class="hero-image" src="<?php echo $systemUrl; ?>assets/images/profile.png" alt="Donatien KANANE" />
+                        <?php echo pictureTag($systemUrl . 'assets/images/profile.png', 'Photo de Donatien KANANE', 'class="hero-image" width="400" height="400"'); ?>
                         <div class="hero-image-ring"></div>
                         <div class="hero-image-dots"></div>
                     </div>
@@ -146,7 +236,7 @@ $blogStats = getAllBlogStats($db);
         <div class="container">
             <div class="row text-center">
                 <div class="col-6 col-md-3 stat-item">
-                    <div class="stat-number" data-count="3">0</div>
+                    <div class="stat-number" data-count="5">0</div>
                     <div class="stat-label">Années d'expérience</div>
                 </div>
                 <div class="col-6 col-md-3 stat-item">
@@ -164,6 +254,52 @@ $blogStats = getAllBlogStats($db);
             </div>
         </div>
     </section>
+    <!-- ===== STACK & OUTILS ===== -->
+    <section class="section-block stack-section" id="stack">
+        <div class="container">
+            <div class="section-title text-center">
+                <span class="section-subtitle">Technologies</span>
+                <h2>Stack & Outils</h2>
+                <div class="title-line"></div>
+            </div>
+
+            <!-- Développement : Langages, Frameworks & Base de données -->
+            <div class="stack-category">
+                <h4 class="stack-category-title"><i class="fas fa-code"></i> Langages, Frameworks & Base de données</h4>
+                <div class="stack-icons">
+                    <img src="https://skillicons.dev/icons?i=php,laravel,python,django,js,jquery,html,css,kotlin,mysql,bootstrap&perline=11" alt="Langages et Frameworks" loading="lazy">
+                </div>
+            </div>
+
+            <!-- Outils & Environnement de développement -->
+            <div class="stack-category">
+                <h4 class="stack-category-title"><i class="fas fa-tools"></i> Outils & Environnement de développement</h4>
+                <div class="stack-icons">
+                    <img src="https://skillicons.dev/icons?i=vscode,git,github,powershell,npm&perline=8" alt="Outils de développement" loading="lazy">
+                </div>
+            </div>
+
+            <!-- Cloud & DevOps -->
+            <div class="stack-category">
+                <h4 class="stack-category-title"><i class="fas fa-cloud"></i> Cloud & DevOps</h4>
+                <div class="stack-icons">
+                    <img src="https://skillicons.dev/icons?i=docker,linux,aws,nginx,githubactions&perline=8" alt="Cloud et DevOps" loading="lazy">
+                </div>
+            </div>
+
+            <!-- Data & Analyse -->
+            <div class="stack-category">
+                <h4 class="stack-category-title"><i class="fas fa-chart-pie"></i> Data & Analyse</h4>
+                <div class="stack-icons-custom">
+                    <div class="stack-badge" title="Power BI"><i class="fas fa-chart-bar"></i><span>Power BI</span></div>
+                    <div class="stack-badge" title="SPSS"><i class="fas fa-calculator"></i><span>SPSS</span></div>
+                    <div class="stack-badge" title="KOBO Collect"><i class="fas fa-clipboard-list"></i><span>KOBO Collect</span></div>
+                    <div class="stack-badge" title="Excel"><i class="fas fa-file-excel"></i><span>Excel</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ===== SERVICES ===== -->
     <section class="section-block services-section" id="services">
         <div class="container">
@@ -248,27 +384,96 @@ $blogStats = getAllBlogStats($db);
                 <h2>Compétences Techniques</h2>
                 <div class="title-line"></div>
             </div>
-            <div class="row g-4">
-                <?php foreach ($skills as $skill): ?>
-                <div class="col-md-6 col-lg-4">
-                    <div class="skill-card">
-                        <div class="skill-ring-wrapper">
-                            <svg class="skill-ring-svg" viewBox="0 0 56 56">
-                                <circle class="skill-ring-bg" cx="28" cy="28" r="26" />
-                                <circle class="skill-ring-fill" cx="28" cy="28" r="26" data-percent="<?php echo $skill['level']; ?>" />
-                            </svg>
-                            <span class="skill-ring-percent"><?php echo $skill['level']; ?></span>
-                        </div>
-                        <div class="skill-info">
-                            <span class="skill-name"><?php echo sanitizeOutput($skill['name']); ?></span>
-                            <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-width="<?php echo $skill['level']; ?>"></div>
+
+            <?php
+            // Group skills by category
+            $skillsByCategory = [];
+            $categoryIcons = [
+                'Front-end' => 'fa-palette',
+                'Back-end'  => 'fa-server',
+                'Outils'    => 'fa-toolbox',
+            ];
+            $categoryColors = [
+                'Front-end' => '#6366f1',
+                'Back-end'  => '#06b6d4',
+                'Outils'    => '#f59e0b',
+            ];
+            foreach ($skills as $sk) {
+                $cat = $sk['category'] ?? 'Autres';
+                $skillsByCategory[$cat][] = $sk;
+            }
+            $avgLevel = count($skills) > 0 ? round(array_sum(array_column($skills, 'level')) / count($skills)) : 0;
+            ?>
+
+            <!-- Overall stat -->
+            <div class="skills-overview">
+                <div class="skills-overview-ring">
+                    <svg viewBox="0 0 120 120">
+                        <circle class="skills-overview-bg" cx="60" cy="60" r="54" />
+                        <circle class="skills-overview-fill" cx="60" cy="60" r="54" data-percent="<?php echo $avgLevel; ?>" />
+                    </svg>
+                    <div class="skills-overview-text">
+                        <span class="skills-overview-number"><?php echo $avgLevel; ?></span>
+                        <span class="skills-overview-label">score moyen</span>
+                    </div>
+                </div>
+                <div class="skills-overview-info">
+                    <h3><?php echo $skillCount; ?> technologies maîtrisées</h3>
+                    <p>Réparties en <?php echo count($skillsByCategory); ?> domaines d'expertise avec un score moyen de <strong><?php echo $avgLevel; ?>%</strong></p>
+                </div>
+            </div>
+
+            <!-- Category filter tabs -->
+            <div class="skills-filter">
+                <button class="skills-filter-btn active" data-filter="all"><i class="fas fa-th"></i> Toutes</button>
+                <?php foreach ($skillsByCategory as $catName => $catSkills): ?>
+                <button class="skills-filter-btn" data-filter="<?php echo strtolower(str_replace([' ', '-'], '', $catName)); ?>">
+                    <i class="fas <?php echo $categoryIcons[$catName] ?? 'fa-cube'; ?>"></i> <?php echo sanitizeOutput($catName); ?>
+                    <span class="skills-filter-count"><?php echo count($catSkills); ?></span>
+                </button>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Skills grid by category -->
+            <?php foreach ($skillsByCategory as $catName => $catSkills): ?>
+            <div class="skills-category-group" data-category="<?php echo strtolower(str_replace([' ', '-'], '', $catName)); ?>">
+                <div class="skills-category-header">
+                    <span class="skills-category-icon" style="--cat-color: <?php echo $categoryColors[$catName] ?? '#6366f1'; ?>">
+                        <i class="fas <?php echo $categoryIcons[$catName] ?? 'fa-cube'; ?>"></i>
+                    </span>
+                    <h4><?php echo sanitizeOutput($catName); ?></h4>
+                    <span class="skills-category-line"></span>
+                </div>
+                <div class="row g-3">
+                    <?php foreach ($catSkills as $skill): ?>
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="skill-card" style="--skill-color: <?php echo $categoryColors[$catName] ?? '#6366f1'; ?>">
+                            <div class="skill-ring-wrapper">
+                                <svg class="skill-ring-svg" viewBox="0 0 56 56">
+                                    <circle class="skill-ring-bg" cx="28" cy="28" r="26" />
+                                    <circle class="skill-ring-fill" cx="28" cy="28" r="26" data-percent="<?php echo $skill['level']; ?>" />
+                                </svg>
+                                <span class="skill-ring-percent"><?php echo $skill['level']; ?></span>
+                            </div>
+                            <div class="skill-info">
+                                <span class="skill-name"><?php echo sanitizeOutput($skill['name']); ?></span>
+                                <div class="skill-bar-track">
+                                    <div class="skill-bar-fill" data-width="<?php echo $skill['level']; ?>"></div>
+                                </div>
+                                <span class="skill-level-label"><?php
+                                    $lvl = $skill['level'];
+                                    if ($lvl >= 90) echo 'Expert';
+                                    elseif ($lvl >= 80) echo 'Avancé';
+                                    elseif ($lvl >= 60) echo 'Intermédiaire';
+                                    else echo 'Débutant';
+                                ?></span>
                             </div>
                         </div>
                     </div>
+                    <?php endforeach; ?>
                 </div>
-                <?php endforeach; ?>
             </div>
+            <?php endforeach; ?>
         </div>
     </section>
 
@@ -299,7 +504,7 @@ $blogStats = getAllBlogStats($db);
                     <?php if (!empty($featured['image_url'])): ?>
                     <div class="col-lg-6">
                         <div class="featured-project-image">
-                            <img class="img-fluid rounded-3" src="<?php echo sanitizeOutput($featured['image_url']); ?>" alt="<?php echo sanitizeOutput($featured['title']); ?>" />
+                            <?php echo pictureTag(sanitizeOutput($featured['image_url']), sanitizeOutput($featured['title']), 'class="img-fluid rounded-3" loading="lazy" width="600" height="400"'); ?>
                             <div class="featured-badge"><i class="fas fa-star"></i> Projet phare</div>
                         </div>
                     </div>
@@ -318,8 +523,8 @@ $blogStats = getAllBlogStats($db);
                                 <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $fLikes; ?></span>
                             </div>
                             <div class="d-flex gap-3 flex-wrap">
-                                <a href="<?php echo sanitizeOutput($featured['project_url']); ?>" class="btn btn-primary-custom" target="_blank"><i class="fas fa-external-link-alt"></i> Voir le projet</a>
-                                <a href="project.php?url=<?php echo urlencode($featured['project_url']); ?>" class="btn btn-outline-custom"><i class="fas fa-info-circle"></i> Détails</a>
+                                <a href="<?php echo sanitizeOutput($featured['project_url']); ?>" class="btn btn-primary-custom" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Voir le projet</a>
+                                <a href="projet/<?php echo urlencode($featured['project_url']); ?>" class="btn btn-outline-custom"><i class="fas fa-info-circle"></i> Détails</a>
                             </div>
                         </div>
                     </div>
@@ -333,8 +538,8 @@ $blogStats = getAllBlogStats($db);
                     <div class="project-card">
                         <?php if (!empty($proj['image_url'])): ?>
                         <div class="project-card-image">
-                            <a href="project.php?url=<?php echo urlencode($proj['project_url']); ?>">
-                                <img src="<?php echo sanitizeOutput($proj['image_url']); ?>" alt="<?php echo sanitizeOutput($proj['title']); ?>" />
+                            <a href="projet/<?php echo urlencode($proj['project_url']); ?>">
+                                <?php echo pictureTag(sanitizeOutput($proj['image_url']), sanitizeOutput($proj['title']), 'loading="lazy" width="400" height="260"'); ?>
                             </a>
                         </div>
                         <?php else: ?>
@@ -343,7 +548,7 @@ $blogStats = getAllBlogStats($db);
                         </div>
                         <?php endif; ?>
                         <div class="project-card-body">
-                            <h4><a href="project.php?url=<?php echo urlencode($proj['project_url']); ?>"><?php echo sanitizeOutput($proj['title']); ?></a></h4>
+                            <h4><a href="projet/<?php echo urlencode($proj['project_url']); ?>"><?php echo sanitizeOutput($proj['title']); ?></a></h4>
                             <p><?php echo mb_strimwidth(sanitizeOutput($proj['description']), 0, 120, '...'); ?></p>
                             <div class="card-engagement">
                                 <?php
@@ -354,7 +559,7 @@ $blogStats = getAllBlogStats($db);
                                 <span class="engagement-badge" title="Commentaires"><i class="far fa-comment-dots"></i> <?php echo $pComments; ?></span>
                                 <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $pLikes; ?></span>
                             </div>
-                            <a href="project.php?url=<?php echo urlencode($proj['project_url']); ?>" class="project-link"><i class="fas fa-arrow-right"></i> En savoir plus</a>
+                            <a href="projet/<?php echo urlencode($proj['project_url']); ?>" class="project-link"><i class="fas fa-arrow-right"></i> En savoir plus</a>
                         </div>
                     </div>
                 </div>
@@ -390,7 +595,7 @@ $blogStats = getAllBlogStats($db);
     </section>
 
     <!-- ===== EDUCATION ===== -->
-    <section class="section-block education-section">
+    <section class="section-block education-section" id="education">
         <div class="container">
             <div class="section-title text-center">
                 <span class="section-subtitle">Ma formation</span>
@@ -441,7 +646,7 @@ $blogStats = getAllBlogStats($db);
                     <div class="col-lg-6">
                         <div class="blog-featured-image">
                             <?php if (!empty($featuredPost['image_url'])): ?>
-                                <img src="<?php echo sanitizeOutput($featuredPost['image_url']); ?>" alt="<?php echo sanitizeOutput($featuredPost['title']); ?>" />
+                                <?php echo pictureTag(sanitizeOutput($featuredPost['image_url']), sanitizeOutput($featuredPost['title']), 'loading="lazy" width="600" height="400"'); ?>
                             <?php else: ?>
                                 <div class="blog-card-placeholder">
                                     <i class="fas fa-newspaper"></i>
@@ -457,7 +662,7 @@ $blogStats = getAllBlogStats($db);
                                 <i class="far fa-calendar-alt"></i>
                                 <?php echo date('d M Y', strtotime($featuredPost['created_at'])); ?>
                             </div>
-                            <h3><a href="blog.php?slug=<?php echo urlencode($featuredPost['slug']); ?>"><?php echo sanitizeOutput($featuredPost['title']); ?></a></h3>
+                            <h3><a href="blog/<?php echo urlencode($featuredPost['slug']); ?>"><?php echo sanitizeOutput($featuredPost['title']); ?></a></h3>
                             <p><?php echo sanitizeOutput($featuredPost['excerpt']); ?></p>
                             <div class="card-engagement">
                                 <?php
@@ -467,7 +672,7 @@ $blogStats = getAllBlogStats($db);
                                 <span class="engagement-badge" title="Commentaires"><i class="far fa-comment-dots"></i> <?php echo $bComments; ?></span>
                                 <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $bLikes; ?></span>
                             </div>
-                            <a href="blog.php?slug=<?php echo urlencode($featuredPost['slug']); ?>" class="btn btn-primary-custom btn-sm">
+                            <a href="blog/<?php echo urlencode($featuredPost['slug']); ?>" class="btn btn-primary-custom btn-sm">
                                 <i class="fas fa-arrow-right"></i> Lire l'article
                             </a>
                         </div>
@@ -490,7 +695,7 @@ $blogStats = getAllBlogStats($db);
                                 <span class="blog-feed-category"><?php echo sanitizeOutput($post['category']); ?></span>
                                 <span class="blog-feed-date"><i class="far fa-clock"></i> <?php echo date('d M Y', strtotime($post['created_at'])); ?></span>
                             </div>
-                            <h4><a href="blog.php?slug=<?php echo urlencode($post['slug']); ?>"><?php echo sanitizeOutput($post['title']); ?></a></h4>
+                            <h4><a href="blog/<?php echo urlencode($post['slug']); ?>"><?php echo sanitizeOutput($post['title']); ?></a></h4>
                             <p><?php echo mb_strimwidth(sanitizeOutput($post['excerpt']), 0, 150, '...'); ?></p>
                             <div class="card-engagement">
                                 <?php
@@ -500,7 +705,7 @@ $blogStats = getAllBlogStats($db);
                                 <span class="engagement-badge" title="Commentaires"><i class="far fa-comment-dots"></i> <?php echo $bC; ?></span>
                                 <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $bL; ?></span>
                             </div>
-                            <a href="blog.php?slug=<?php echo urlencode($post['slug']); ?>" class="blog-read-more">
+                            <a href="blog/<?php echo urlencode($post['slug']); ?>" class="blog-read-more">
                                 Lire la suite <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
@@ -519,14 +724,39 @@ $blogStats = getAllBlogStats($db);
     </section>
 
     <!-- ===== GITHUB ===== -->
+    <?php $ghUser = sanitizeOutput($profile['github_username'] ?? ''); ?>
+    <?php if (!empty($ghUser)): ?>
     <section class="section-block github-section" id="github">
         <div class="container">
             <div class="section-title text-center">
                 <span class="section-subtitle">Open Source</span>
                 <h2>Activité GitHub</h2>
                 <div class="title-line"></div>
+                <p class="section-description">Contributions, statistiques et activité récente sur <a href="https://github.com/<?php echo $ghUser; ?>" target="_blank" rel="noopener noreferrer">github.com/<?php echo $ghUser; ?></a></p>
             </div>
-            <div class="row g-4">
+
+            <!-- Stats Cards Row -->
+            <div class="github-stats-row">
+                <div class="github-stat-card">
+                    <img src="https://github-readme-stats.vercel.app/api?username=<?php echo $ghUser; ?>&show_icons=true&theme=transparent&hide_border=true&include_all_commits=true&count_private=true&title_color=6366f1&icon_color=06b6d4&text_color=64748b" alt="Statistiques GitHub de <?php echo $ghUser; ?>" loading="lazy" width="495" height="195" onerror="this.parentElement.innerHTML='<div class=\'github-stat-fallback\'><i class=\'fas fa-chart-bar fa-3x mb-3\'></i><p>Statistiques temporairement indisponibles</p><a href=\'https://github.com/<?php echo $ghUser; ?>\' target=\'_blank\' rel=\'noopener noreferrer\'>Voir sur GitHub</a></div>'">
+                </div>
+                <div class="github-stat-card">
+                    <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=<?php echo $ghUser; ?>&layout=compact&theme=transparent&hide_border=true&title_color=6366f1&text_color=64748b&langs_count=8" alt="Langages les plus utilisés" loading="lazy" width="350" height="195" onerror="this.parentElement.innerHTML='<div class=\'github-stat-fallback\'><i class=\'fas fa-code fa-3x mb-3\'></i><p>Langages temporairement indisponibles</p><a href=\'https://github.com/<?php echo $ghUser; ?>\' target=\'_blank\' rel=\'noopener noreferrer\'>Voir sur GitHub</a></div>'">
+                </div>
+            </div>
+
+            <!-- Streak Stats -->
+            <div class="github-streak-card">
+                <img src="https://github-readme-streak-stats.herokuapp.com/?user=<?php echo $ghUser; ?>&theme=transparent&hide_border=true&ring=6366f1&fire=06b6d4&currStreakLabel=6366f1&sideLabels=64748b&dates=94a3b8" alt="Série de contributions GitHub" loading="lazy" width="800" height="220" onerror="this.parentElement.innerHTML='<div class=\'github-stat-fallback\'><i class=\'fas fa-fire fa-3x mb-3\'></i><p>Streak stats temporairement indisponibles</p></div>'">
+            </div>
+
+            <!-- Activity Graph -->
+            <div class="github-graph-card">
+                <img src="https://github-readme-activity-graph.vercel.app/graph?username=<?php echo $ghUser; ?>&theme=react-dark&hide_border=true&area=true&bg_color=00000000&color=6366f1&line=06b6d4&point=6366f1&area_color=6366f1" alt="Graphique d'activité GitHub" loading="lazy" width="900" height="300" onerror="this.parentElement.innerHTML='<div class=\'github-stat-fallback\'><i class=\'fas fa-chart-line fa-3x mb-3\'></i><p>Graphique d\'activité temporairement indisponible</p></div>'">
+            </div>
+
+            <!-- Calendar + Activity Feed -->
+            <div class="row g-4 mt-2">
                 <div class="col-lg-7">
                     <div class="github-card">
                         <h5><i class="fas fa-calendar-alt"></i> Calendrier de contributions</h5>
@@ -540,8 +770,16 @@ $blogStats = getAllBlogStats($db);
                     </div>
                 </div>
             </div>
+
+            <!-- CTA -->
+            <div class="text-center mt-4">
+                <a href="https://github.com/<?php echo $ghUser; ?>" target="_blank" rel="noopener noreferrer" class="btn btn-outline-custom">
+                    <i class="fa-brands fa-github"></i> Voir mon profil GitHub
+                </a>
+            </div>
         </div>
     </section>
+    <?php endif; ?>
 
     <!-- ===== CONTACT ===== -->
     <section class="section-block contact-section" id="contact">
@@ -572,7 +810,7 @@ $blogStats = getAllBlogStats($db);
                     <div class="contact-card">
                         <div class="contact-card-icon"><i class="fas fa-globe"></i></div>
                         <h4>Web</h4>
-                        <a href="<?php echo sanitizeOutput($profile['website'] ?? '#'); ?>" target="_blank"><?php echo sanitizeOutput($profile['website'] ?? ''); ?></a>
+                        <a href="<?php echo sanitizeOutput($profile['website'] ?? '#'); ?>" target="_blank" rel="noopener noreferrer"><?php echo sanitizeOutput($profile['website'] ?? ''); ?></a>
                     </div>
                 </div>
             </div>
@@ -582,6 +820,8 @@ $blogStats = getAllBlogStats($db);
         </div>
     </section>
 
+    </main>
+
     <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <div class="container">
@@ -589,13 +829,13 @@ $blogStats = getAllBlogStats($db);
                 <div class="footer-brand">DK<span>.</span></div>
                 <div class="footer-socials">
                     <?php if (!empty($profile['github_username'])): ?>
-                    <a href="https://github.com/<?php echo sanitizeOutput($profile['github_username']); ?>" target="_blank"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://github.com/<?php echo sanitizeOutput($profile['github_username']); ?>" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
                     <?php endif; ?>
                     <?php if (!empty($profile['linkedin_url'])): ?>
-                    <a href="<?php echo sanitizeOutput($profile['linkedin_url']); ?>" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="<?php echo sanitizeOutput($profile['linkedin_url']); ?>" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
                     <?php endif; ?>
                     <?php if (!empty($profile['twitter_url'])): ?>
-                    <a href="<?php echo sanitizeOutput($profile['twitter_url']); ?>" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="<?php echo sanitizeOutput($profile['twitter_url']); ?>" target="_blank" rel="noopener noreferrer" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
                     <?php endif; ?>
                 </div>
                 <p class="footer-copy">&copy; <?php echo date('Y'); ?> Donatien KANANE. Tous droits réservés.</p>
@@ -607,19 +847,57 @@ $blogStats = getAllBlogStats($db);
     <button class="back-to-top" id="backToTop" aria-label="Retour en haut"><i class="fas fa-arrow-up"></i></button>
 
     <!-- Javascript -->
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/plugins/popper.min.js"></script>
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/plugins/vanilla-rss/dist/rss.global.min.js"></script>
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/plugins/dark-mode-switch/dark-mode-switch.min.js"></script>
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/plugins/github-calendar/dist/github-calendar.min.js"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/mustache.js/0.7.2/mustache.min.js"></script>
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/plugins/github-activity/src/github-activity.js"></script>
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/js/main.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/popper.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/vanilla-rss/dist/rss.global.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/dark-mode-switch/dark-mode-switch.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/github-calendar/dist/github-calendar.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/mustache.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/github-activity/src/github-activity.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/js/main.min.js?v=<?php echo time(); ?>"></script>
 
     <?php if (!empty($profile['github_username'])): ?>
     <script>
-        GitHubCalendar("#github-graph", "<?php echo sanitizeOutput($profile['github_username']); ?>", { responsive: true, tooltips: true });
-        GitHubActivity.feed({ username: "<?php echo sanitizeOutput($profile['github_username']); ?>", selector: "#ghfeed", limit: 10 });
+    (function() {
+        var username = "<?php echo sanitizeOutput($profile['github_username']); ?>";
+        var graphEl = document.getElementById('github-graph');
+        var feedEl = document.getElementById('ghfeed');
+
+        // Loading indicators
+        if (graphEl) graphEl.innerHTML = '<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><p class="mt-2 text-muted">Chargement du calendrier...</p></div>';
+        if (feedEl) feedEl.innerHTML = '<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x"></i><p class="mt-2 text-muted">Chargement des activités...</p></div>';
+
+        // GitHub Calendar
+        if (graphEl && typeof GitHubCalendar === 'function') {
+            try {
+                var calPromise = GitHubCalendar("#github-graph", username, { responsive: true, tooltips: true });
+                if (calPromise && typeof calPromise.catch === 'function') {
+                    calPromise.catch(function() {
+                        graphEl.innerHTML = '<div class="text-center py-4 text-muted"><i class="fas fa-calendar-times fa-2x mb-2"></i><p>Calendrier temporairement indisponible</p></div>';
+                    });
+                }
+            } catch(e) {
+                graphEl.innerHTML = '<div class="text-center py-4 text-muted"><i class="fas fa-calendar-times fa-2x mb-2"></i><p>Calendrier temporairement indisponible</p></div>';
+            }
+        }
+
+        // GitHub Activity Feed
+        if (feedEl && typeof GitHubActivity === 'object' && typeof Mustache === 'object') {
+            try {
+                GitHubActivity.feed({ username: username, selector: "#ghfeed", limit: 10 });
+            } catch(e) {
+                feedEl.innerHTML = '<div class="text-center py-4 text-muted"><i class="fas fa-exclamation-circle fa-2x mb-2"></i><p>Activités temporairement indisponibles</p></div>';
+            }
+            // Fallback if feed stays empty after 10s
+            setTimeout(function() {
+                if (feedEl && feedEl.innerHTML.indexOf('gha-feed') === -1 && feedEl.innerHTML.indexOf('fa-spinner') !== -1) {
+                    feedEl.innerHTML = '<div class="text-center py-4 text-muted"><i class="fas fa-clock fa-2x mb-2"></i><p>L\'API GitHub est lente. <a href="https://github.com/' + username + '" target="_blank" rel="noopener noreferrer">Voir sur GitHub <i class="fas fa-external-link-alt"></i></a></p></div>';
+                }
+            }, 10000);
+        } else {
+            if (feedEl) feedEl.innerHTML = '<div class="text-center py-4 text-muted"><i class="fas fa-code fa-2x mb-2"></i><p>Visitez mon profil <a href="https://github.com/' + username + '" target="_blank" rel="noopener noreferrer">GitHub <i class="fas fa-external-link-alt"></i></a></p></div>';
+        }
+    })();
     </script>
     <?php endif; ?>
 </body>

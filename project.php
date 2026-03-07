@@ -1,6 +1,6 @@
 <?php
-session_start();
 require_once 'config.php';
+session_start();
 require_once 'includes/Database.php';
 require_once 'includes/functions.php';
 
@@ -25,50 +25,93 @@ $debugMode = isDebugMode();
 $systemUrl = getSystemUrl();
 $locale = getDefaultLocale();
 ?>
+<?php
+$projectTitle = sanitizeOutput($project['title']) . ' — Donatien KANANE';
+$projectDesc = sanitizeOutput($project['description']);
+$projectUrl = $systemUrl . 'projet/' . urlencode($project_url);
+$projectImage = !empty($project['image']) ? $systemUrl . sanitizeOutput($project['image']) : $systemUrl . 'assets/images/profile.png';
+?>
 <!DOCTYPE html>
 <html lang="<?php echo substr($locale, 0, 2); ?>">
 <head>
-    <title><?php echo $debugMode ? '[DEBUG] ' : ''; ?><?php echo sanitizeOutput($project['title']); ?> - Donatien KANANE</title>
-    <!-- Meta -->
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php echo sanitizeOutput($project['description']); ?>">
-    <meta name="author" content="<?php echo sanitizeOutput($profile['name'] ?? 'Donatien KANANE'); ?>">    
-    <link rel="shortcut icon" href="favicon.ico">  
-    
-    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap' rel='stylesheet' type='text/css'> 
-    
-    <!-- FontAwesome JS -->
-    <script defer src="<?php echo $systemUrl; ?>assets/fontawesome/js/all.js"></script>
-    
-    <!-- Global CSS -->
-    <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/plugins/bootstrap/css/bootstrap.min.css">  
-    
-    <!-- Theme CSS -->  
-    <link id="theme-style" rel="stylesheet" href="<?php echo $systemUrl; ?>assets/css/styles.css">
+    <title><?php echo $projectTitle; ?></title>
+    <meta name="description" content="<?php echo $projectDesc; ?>">
+    <meta name="author" content="<?php echo sanitizeOutput($profile['name'] ?? 'Donatien KANANE'); ?>">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="canonical" href="<?php echo $projectUrl; ?>">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="<?php echo $projectTitle; ?>">
+    <meta property="og:description" content="<?php echo $projectDesc; ?>">
+    <meta property="og:url" content="<?php echo $projectUrl; ?>">
+    <meta property="og:image" content="<?php echo $projectImage; ?>">
+    <meta property="og:locale" content="fr_FR">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo $projectTitle; ?>">
+    <meta name="twitter:description" content="<?php echo $projectDesc; ?>">
+    <meta name="twitter:image" content="<?php echo $projectImage; ?>">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://code.jquery.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link id="theme-style" rel="stylesheet" href="<?php echo $systemUrl; ?>assets/css/styles.min.css">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "name": "<?php echo sanitizeOutput($project['title']); ?>",
+        "description": "<?php echo $projectDesc; ?>",
+        "url": "<?php echo $projectUrl; ?>",
+        "image": "<?php echo $projectImage; ?>",
+        "author": {
+            "@type": "Person",
+            "name": "<?php echo sanitizeOutput($profile['name'] ?? 'Donatien KANANE'); ?>"
+        }
+    }
+    </script>
 </head> 
 
 <body>
+    <!-- Skip Navigation -->
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+
     <!-- ===== NAVIGATION ===== -->
-    <nav class="navbar-top scrolled" id="navbar">
+    <nav class="navbar-top scrolled" id="navbar" aria-label="Navigation principale">
         <div class="container d-flex align-items-center justify-content-between">
             <a href="index.php" class="nav-brand">DK<span>.</span></a>
-            <div class="nav-links d-none d-md-flex">
-                <a href="index.php#projects">Projets</a>
-                <a href="index.php#skills">Compétences</a>
-                <a href="index.php#experience">Expérience</a>
-                <a href="index.php#contact">Contact</a>
-            </div>
+            <ul class="nav-links d-none d-md-flex" role="menubar">
+                <li role="none"><a href="index.php#projects" role="menuitem">Projets</a></li>
+                <li role="none"><a href="index.php#skills" role="menuitem">Compétences</a></li>
+                <li role="none"><a href="index.php#experience" role="menuitem">Expérience</a></li>
+                <li role="none"><a href="index.php#contact" role="menuitem">Contact</a></li>
+            </ul>
             <div class="nav-actions d-flex align-items-center gap-3">
                 <div class="form-check form-switch mb-0">
-                    <input type="checkbox" class="form-check-input" id="darkSwitch" />
+                    <input type="checkbox" class="form-check-input" id="darkSwitch" aria-label="Activer le mode sombre" />
                     <label class="form-check-label" for="darkSwitch"><i class="fas fa-moon"></i></label>
                 </div>
                 <a class="btn btn-primary-custom btn-sm" href="index.php"><i class="fas fa-arrow-left"></i> Retour</a>
             </div>
         </div>
     </nav>
+
+    <main id="main-content">
 
     <!-- ===== PROJECT HERO ===== -->
     <section class="project-hero">
@@ -97,7 +140,7 @@ $locale = getDefaultLocale();
                 <div class="project-detail-card">
                     <?php if (!empty($project['image_url'])): ?>
                     <div class="project-detail-image">
-                        <img class="img-fluid" src="<?php echo sanitizeOutput($project['image_url']); ?>" alt="<?php echo sanitizeOutput($project['title']); ?>" />
+                        <img class="img-fluid" src="<?php echo sanitizeOutput($project['image_url']); ?>" alt="<?php echo sanitizeOutput($project['title']); ?>" loading="lazy" width="800" height="500" />
                     </div>
                     <?php endif; ?>
                     <div class="project-detail-body">
@@ -107,7 +150,7 @@ $locale = getDefaultLocale();
                         </div>
                         <?php if (!empty($project['project_url'])): ?>
                         <div class="project-detail-actions">
-                            <a href="<?php echo sanitizeOutput($project['project_url']); ?>" class="btn btn-primary-custom" target="_blank">
+                            <a href="<?php echo sanitizeOutput($project['project_url']); ?>" class="btn btn-primary-custom" target="_blank" rel="noopener noreferrer">
                                 <i class="fas fa-external-link-alt"></i> Voir le projet en ligne
                             </a>
                         </div>
@@ -294,7 +337,7 @@ $locale = getDefaultLocale();
                         <?php endif; ?>
                     </div>
                     <?php if (!empty($project['project_url'])): ?>
-                    <a href="<?php echo sanitizeOutput($project['project_url']); ?>" class="btn btn-primary-custom w-100 mt-3" target="_blank">
+                    <a href="<?php echo sanitizeOutput($project['project_url']); ?>" class="btn btn-primary-custom w-100 mt-3" target="_blank" rel="noopener noreferrer">
                         <i class="fas fa-external-link-alt"></i> Visiter le projet
                     </a>
                     <?php endif; ?>
@@ -303,14 +346,16 @@ $locale = getDefaultLocale();
                 <div class="project-sidebar-card">
                     <h4><i class="fas fa-share-alt"></i> Partager</h4>
                     <div class="sidebar-share-links">
-                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($systemUrl . 'project.php?url=' . urlencode($project['project_url'])); ?>" target="_blank" class="share-btn linkedin" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($systemUrl . 'project.php?url=' . urlencode($project['project_url'])); ?>&text=<?php echo urlencode($project['title']); ?>" target="_blank" class="share-btn twitter" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="mailto:?subject=<?php echo urlencode($project['title']); ?>&body=<?php echo urlencode($systemUrl . 'project.php?url=' . urlencode($project['project_url'])); ?>" class="share-btn email" title="Email"><i class="fas fa-envelope"></i></a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($systemUrl . 'projet/' . urlencode($project['project_url'])); ?>" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($systemUrl . 'projet/' . urlencode($project['project_url'])); ?>&text=<?php echo urlencode($project['title']); ?>" target="_blank" rel="noopener noreferrer" class="share-btn twitter" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="mailto:?subject=<?php echo urlencode($project['title']); ?>&body=<?php echo urlencode($systemUrl . 'projet/' . urlencode($project['project_url'])); ?>" class="share-btn email" title="Email"><i class="fas fa-envelope"></i></a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    </main>
 
     <!-- ******FOOTER****** --> 
     <footer class="footer">
@@ -322,13 +367,14 @@ $locale = getDefaultLocale();
         </div>
     </footer>
  
-    <!-- Javascript -->          
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/plugins/popper.min.js"></script> 
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/plugins/bootstrap/js/bootstrap.min.js"></script>    
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/plugins/dark-mode-switch/dark-mode-switch.min.js"></script> 
-    <!-- custom js -->
-    <script type="text/javascript" src="<?php echo $systemUrl; ?>assets/js/main.js"></script>
+    </main>
+
+    <!-- Javascript -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/popper.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/dark-mode-switch/dark-mode-switch.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/js/main.js"></script>
     
     <script>
     $(document).ready(function() {

@@ -32,6 +32,19 @@ function sanitizeOutput($text) {
     return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 }
 
+function webpPath($imageSrc) {
+    return preg_replace('/\.(png|jpe?g)$/i', '.webp', $imageSrc);
+}
+
+function pictureTag($src, $alt, $attrs = '') {
+    $webp = webpPath($src);
+    $type = preg_match('/\.png$/i', $src) ? 'image/png' : 'image/jpeg';
+    return '<picture>'
+        . '<source srcset="' . sanitizeOutput($webp) . '" type="image/webp">'
+        . '<img src="' . sanitizeOutput($src) . '" alt="' . sanitizeOutput($alt) . '" ' . $attrs . '>'
+        . '</picture>';
+}
+
 /**
  * Formate une date au format Y-m-d
  * @param string $date Date à formater

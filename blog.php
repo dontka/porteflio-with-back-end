@@ -1,6 +1,6 @@
 <?php
-session_start();
 require_once 'config.php';
+session_start();
 require_once 'includes/Database.php';
 require_once 'includes/functions.php';
 
@@ -19,40 +19,90 @@ if (!$post) {
 $systemUrl = getSystemUrl();
 $locale = getDefaultLocale();
 ?>
+<?php
+$blogTitle = sanitizeOutput($post['title']) . ' — Blog | Donatien KANANE';
+$blogDesc = sanitizeOutput($post['excerpt']);
+$blogUrl = $systemUrl . 'blog/' . urlencode($slug);
+$blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']) : $systemUrl . 'assets/images/profile.png';
+?>
 <!DOCTYPE html>
 <html lang="<?php echo substr($locale, 0, 2); ?>">
 <head>
-    <title><?php echo sanitizeOutput($post['title']); ?> — Blog | Donatien KANANE</title>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php echo sanitizeOutput($post['excerpt']); ?>">
+    <title><?php echo $blogTitle; ?></title>
+    <meta name="description" content="<?php echo $blogDesc; ?>">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#6366f1">
+    <link rel="canonical" href="<?php echo $blogUrl; ?>">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <script defer src="<?php echo $systemUrl; ?>assets/fontawesome/js/all.js"></script>
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="<?php echo $blogTitle; ?>">
+    <meta property="og:description" content="<?php echo $blogDesc; ?>">
+    <meta property="og:url" content="<?php echo $blogUrl; ?>">
+    <meta property="og:image" content="<?php echo $blogImage; ?>">
+    <meta property="og:locale" content="fr_FR">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?php echo $blogTitle; ?>">
+    <meta name="twitter:description" content="<?php echo $blogDesc; ?>">
+    <meta name="twitter:image" content="<?php echo $blogImage; ?>">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://code.jquery.com">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/plugins/bootstrap/css/bootstrap.min.css">
-    <link id="theme-style" rel="stylesheet" href="<?php echo $systemUrl; ?>assets/css/styles.css">
+    <link id="theme-style" rel="stylesheet" href="<?php echo $systemUrl; ?>assets/css/styles.min.css">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": "<?php echo sanitizeOutput($post['title']); ?>",
+        "description": "<?php echo $blogDesc; ?>",
+        "url": "<?php echo $blogUrl; ?>",
+        "image": "<?php echo $blogImage; ?>",
+        "datePublished": "<?php echo $post['created_at'] ?? ''; ?>",
+        "author": {
+            "@type": "Person",
+            "name": "Donatien KANANE"
+        }
+    }
+    </script>
 </head>
 <body>
+    <!-- Skip Navigation -->
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
     <!-- ===== NAVIGATION ===== -->
-    <nav class="navbar-top scrolled" id="navbar">
+    <nav class="navbar-top scrolled" id="navbar" aria-label="Navigation principale">
         <div class="container d-flex align-items-center justify-content-between">
             <a href="index.php" class="nav-brand">DK<span>.</span></a>
-            <div class="nav-links d-none d-md-flex">
-                <a href="index.php">Accueil</a>
-                <a href="index.php#projects">Projets</a>
-                <a href="index.php#blog">Blog</a>
-                <a href="index.php#contact">Contact</a>
-            </div>
+            <ul class="nav-links d-none d-md-flex" role="menubar">
+                <li role="none"><a href="index.php" role="menuitem">Accueil</a></li>
+                <li role="none"><a href="index.php#projects" role="menuitem">Projets</a></li>
+                <li role="none"><a href="index.php#blog" role="menuitem">Blog</a></li>
+                <li role="none"><a href="index.php#contact" role="menuitem">Contact</a></li>
+            </ul>
             <div class="nav-actions d-flex align-items-center gap-3">
                 <div class="form-check form-switch mb-0">
-                    <input type="checkbox" class="form-check-input" id="darkSwitch" />
+                    <input type="checkbox" class="form-check-input" id="darkSwitch" aria-label="Activer le mode sombre" />
                     <label class="form-check-label" for="darkSwitch"><i class="fas fa-moon"></i></label>
                 </div>
             </div>
         </div>
     </nav>
+
+    <main id="main-content">
 
     <!-- ===== BLOG HERO ===== -->
     <section class="project-hero">
@@ -298,8 +348,8 @@ $locale = getDefaultLocale();
                     <div class="project-sidebar-card">
                         <h4><i class="fas fa-share-nodes"></i> Partager</h4>
                         <div class="sidebar-share-links">
-                            <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($systemUrl . 'blog.php?slug=' . $post['slug']); ?>" target="_blank" class="share-btn linkedin" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                            <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode($post['title']); ?>&url=<?php echo urlencode($systemUrl . 'blog.php?slug=' . $post['slug']); ?>" target="_blank" class="share-btn twitter" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($systemUrl . 'blog.php?slug=' . $post['slug']); ?>" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode($post['title']); ?>&url=<?php echo urlencode($systemUrl . 'blog.php?slug=' . $post['slug']); ?>" target="_blank" rel="noopener noreferrer" class="share-btn twitter" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
                             <a href="mailto:?subject=<?php echo rawurlencode($post['title']); ?>&body=<?php echo rawurlencode($post['excerpt'] . "\n\n" . $systemUrl . 'blog.php?slug=' . $post['slug']); ?>" class="share-btn email" title="Email"><i class="fas fa-envelope"></i></a>
                         </div>
                     </div>
@@ -308,6 +358,8 @@ $locale = getDefaultLocale();
         </div>
     </div>
 
+    </main>
+
     <!-- ===== FOOTER ===== -->
     <footer class="footer">
         <div class="container">
@@ -315,10 +367,10 @@ $locale = getDefaultLocale();
                 <div class="footer-brand">DK<span>.</span></div>
                 <div class="footer-socials">
                     <?php if (!empty($profile['github_username'])): ?>
-                    <a href="https://github.com/<?php echo sanitizeOutput($profile['github_username']); ?>" target="_blank"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://github.com/<?php echo sanitizeOutput($profile['github_username']); ?>" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
                     <?php endif; ?>
                     <?php if (!empty($profile['linkedin_url'])): ?>
-                    <a href="<?php echo sanitizeOutput($profile['linkedin_url']); ?>" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="<?php echo sanitizeOutput($profile['linkedin_url']); ?>" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
                     <?php endif; ?>
                 </div>
                 <p class="footer-copy">&copy; <?php echo date('Y'); ?> Donatien KANANE. Tous droits réservés.</p>
@@ -328,7 +380,7 @@ $locale = getDefaultLocale();
 
     <button class="back-to-top" id="backToTop" aria-label="Retour en haut"><i class="fas fa-arrow-up"></i></button>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="<?php echo $systemUrl; ?>assets/plugins/popper.min.js"></script>
     <script src="<?php echo $systemUrl; ?>assets/plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="<?php echo $systemUrl; ?>assets/plugins/dark-mode-switch/dark-mode-switch.min.js"></script>

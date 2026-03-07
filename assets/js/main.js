@@ -144,7 +144,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 ring.style.strokeDashoffset = offset;
             }, index * 80);
         });
+
+        // Overview ring (r=54)
+        var overviewRing = document.querySelector('.skills-overview-fill[data-percent]');
+        if (overviewRing) {
+            var overviewCirc = 2 * Math.PI * 54;
+            var pct = parseInt(overviewRing.getAttribute('data-percent'), 10);
+            overviewRing.style.strokeDashoffset = overviewCirc - (overviewCirc * pct / 100);
+        }
     }
+
+    // ===== Skills filter tabs =====
+    (function() {
+        var filterBtns = document.querySelectorAll('.skills-filter-btn');
+        var groups = document.querySelectorAll('.skills-category-group');
+        if (filterBtns.length === 0) return;
+
+        filterBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                var filter = btn.getAttribute('data-filter');
+
+                groups.forEach(function(g) {
+                    if (filter === 'all' || g.getAttribute('data-category') === filter) {
+                        g.classList.remove('hidden');
+                    } else {
+                        g.classList.add('hidden');
+                    }
+                });
+
+                // Re-trigger animations for newly visible cards
+                skillsAnimated = false;
+                animateSkillBars();
+            });
+        });
+    })();
 
     // ===== Scroll reveal =====
     function setupScrollReveal() {
@@ -314,15 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })();
 });
 
-/* GitHub Calendar */
-if (document.querySelector("#github-graph")) {
-    new GitHubCalendar("#github-graph", "dontka", { responsive: true });
-}
-
-/* GitHub Activity Feed */
-if (document.querySelector("#ghfeed")) {
-    GitHubActivity.feed({ username: "dontka", selector: "#ghfeed", limit: 10 });
-}
+/* GitHub Calendar & Activity: initialized via inline script in index.php (uses DB username) */
 
 /* Vanilla RSS */
 var rssFeedElement = document.querySelector("#rss-feeds");
@@ -334,7 +361,7 @@ if (rssFeedElement) {
             limit: 3,
             ssl: true,
             layoutTemplate: "<div class='items'>{entries}</div>",
-            entryTemplate: '<div class="item"><h3 class="title"><a href="{url}" target="_blank">{title}</a></h3><div><p>{shortBodyPlain}</p><a class="more-link" href="{url}" target="_blank"><i class="fas fa-external-link-alt"></i>Lire plus</a></div></div>',
+            entryTemplate: '<div class="item"><h3 class="title"><a href="{url}" target="_blank" rel="noopener noreferrer">{title}</a></h3><div><p>{shortBodyPlain}</p><a class="more-link" href="{url}" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i>Lire plus</a></div></div>',
         }
     );
     rss.render();

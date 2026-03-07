@@ -18,7 +18,7 @@ var GitHubActivity = (function() {
     renderLink: function(url, title, cssClass) {
       if (!title) { title = url; }
       if (typeof(cssClass) === 'undefined') cssClass = "";
-      return Mustache.render('<a class="' + cssClass + '" href="{{url}}" target="_blank">{{{title}}}</a>', { url: url, title: title });
+      return Mustache.render('<a class="' + cssClass + '" href="{{url}}" target="_blank" rel="noopener noreferrer">{{{title}}}</a>', { url: url, title: title });
     },
     renderGitHubLink: function(url, title, cssClass) {
       if (!title) { title = url; }
@@ -344,7 +344,7 @@ var templates = {
                  <div class="gha-user-info{{withoutName}}">{{{userNameLink}}}<p>{{{userLink}}}</p></div>\
                  <div class="gha-gravatar">{{{gravatarLink}}}</div>\
                </div><div class="gha-push"></div>',
-  Footer: '<div class="gha-footer">Public Activity <a href="https://github.com/caseyscarborough/github-activity" target="_blank">GitHub Activity Stream</a>',
+  Footer: '<div class="gha-footer">Public Activity <a href="https://github.com/caseyscarborough/github-activity" target="_blank" rel="noopener noreferrer">GitHub Activity Stream</a>',
   NoActivity: '<div class="gha-info">This user does not have any recent public activity.</div>',
   UserNotFound: '<div class="gha-info">User {{username}} wasn\'t found.</div>',
   EventsNotFound: '<div class="gha-info">Events for user {{username}} not found.</div>',

@@ -84,6 +84,7 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 <html lang="<?php echo substr(getDefaultLocale(), 0, 2); ?>">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests; default-src * 'self' data:; script-src * 'self' 'unsafe-inline' 'unsafe-eval'; style-src * 'self' 'unsafe-inline'; font-src * 'self' data:; img-src * 'self' data:; connect-src * 'self'; object-src 'none'">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Inscription — Donatien KANANE Portfolio</title>
     <meta name="robots" content="noindex, nofollow">

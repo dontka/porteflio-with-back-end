@@ -4,7 +4,12 @@
  * @return string URL système ou chaîne vide si non définie
  */
 function getSystemUrl() {
-    return defined('SYS_URL') ? SYS_URL : '';
+    $url = defined('SYS_URL') ? SYS_URL : '';
+    // Auto-upgrade to HTTPS if the current request is over HTTPS
+    if (!empty($url) && isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {
+        $url = str_replace('http://', 'https://', $url);
+    }
+    return $url;
 }
 
 /**

@@ -49,7 +49,7 @@ AddDefaultCharset UTF-8
 # URL Rewriting for clean/canonical URLs
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /porteflio-with-back-end/
+    RewriteBase /
 
     # Skip rewriting for existing files and directories (assets, images, etc.)
     RewriteCond %{REQUEST_FILENAME} -f [OR]

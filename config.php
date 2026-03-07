@@ -4,7 +4,18 @@
     define("DB_PASSWORD", '');
     define("DB_HOST", 'localhost');
     define("DB_PORT", '3306');
-    define("SYS_URL", 'http://localhost/porteflio-with-back-end/');
+    
+    // Détecte automatiquement le domaine (localhost vs production)
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'];
+    $basePath = dirname($_SERVER['SCRIPT_NAME']);
+    if ($basePath === '\\' || $basePath === '/') {
+        $basePath = '/';
+    } else {
+        $basePath = rtrim($basePath, '/') . '/';
+    }
+    define("SYS_URL", $protocol . '://' . $host . $basePath);
+    
     define("DEBUGGING", false);
     define("DEFAULT_LOCALE", 'fr_FR');
     define("LICENCE_KEY", 'Dontka243');

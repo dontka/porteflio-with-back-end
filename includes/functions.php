@@ -38,6 +38,58 @@ function sanitizeOutput($text) {
     return htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 }
 
+/**
+ * Nettoie et permet HTML WYSIWYG sûr
+ * @param string $html HTML à nettoyer
+ * @return string HTML nettoyé avec tags sûrs seulement
+ */
+function sanitizeWYSIWYG($html) {
+    // Strip tags mais garde whitelist de tags sûrs
+    $allowed = '<h1><h2><h3><h4><h5><h6><p><br><strong><em><u><s><ul><ol><li><a><table><thead><tbody><tfoot><tr><td><th><blockquote><code><pre><hr><div><span><img>';
+    $html = strip_tags($html, $allowed);
+    
+    // Échappe les attributs dangereux
+    $html = preg_replace_callback(
+        '/<(a|img)([^>]*)>/i',
+        function($matches) {
+            $tag = $matches[1];
+            $attrs = $matches[2];
+            
+            // Clear dangerous attributes
+            $attrs = preg_replace('/\s+(on\w+|javascript:|onerror|onload|onclick|onmouseover)/i', '', $attrs);
+            
+            // Whitelist safe attributes
+            if ($tag === 'a') {
+                // For links, only keep href, title, target, rel
+                preg_match_all('/(href|title|target|rel)="([^"]*)"/i', $attrs, $m);
+                $safe_attrs = [];
+                for ($i = 0; $i < count($m[1]); $i++) {
+                    $attr = strtolower($m[1][$i]);
+                    $val = $m[2][$i];
+                    // Prevent javascript: protocol
+                    if ($attr === 'href' && stripos($val, 'javascript:') === 0) continue;
+                    $safe_attrs[] = $attr . '="' . htmlspecialchars($val, ENT_QUOTES, 'UTF-8') . '"';
+                }
+                return '<' . $tag . ' ' . implode(' ', $safe_attrs) . '>';
+            } elseif ($tag === 'img') {
+                // For images, only keep src, alt, width, height
+                preg_match_all('/(src|alt|width|height)="([^"]*)"/i', $attrs, $m);
+                $safe_attrs = [];
+                for ($i = 0; $i < count($m[1]); $i++) {
+                    $attr = strtolower($m[1][$i]);
+                    $val = $m[2][$i];
+                    $safe_attrs[] = $attr . '="' . htmlspecialchars($val, ENT_QUOTES, 'UTF-8') . '"';
+                }
+                return '<' . $tag . ' ' . implode(' ', $safe_attrs) . '>';
+            }
+            return '<' . $tag . '>';
+        },
+        $html
+    );
+    
+    return $html;
+}
+
 function webpPath($imageSrc) {
     return preg_replace('/\.(png|jpe?g)$/i', '.webp', $imageSrc);
 }

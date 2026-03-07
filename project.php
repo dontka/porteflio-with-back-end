@@ -160,7 +160,7 @@ $projectImage = !empty($project['image_url']) ? $systemUrl . sanitizeOutput($pro
                     <div class="project-detail-body">
                         <h2 class="project-detail-heading">Description du projet</h2>
                         <div class="project-detail-text">
-                            <?php echo nl2br(sanitizeOutput($project['description'])); ?>
+                            <?php echo sanitizeWYSIWYG($project['description']); ?>
                         </div>
                         <?php if (!empty($project['project_url'])): ?>
                         <div class="project-detail-actions">

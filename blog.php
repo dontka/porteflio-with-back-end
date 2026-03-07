@@ -151,7 +151,7 @@ $blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']
                         <?php endif; ?>
                         <div class="blog-detail-body">
                             <div class="blog-detail-content">
-                                <?php echo nl2br(sanitizeOutput($post['content'])); ?>
+                                <?php echo sanitizeWYSIWYG($post['content']); ?>
                             </div>
                         </div>
                     </div>

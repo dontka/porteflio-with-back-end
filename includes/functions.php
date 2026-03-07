@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Récupère l'URL système configurée
@@ -63,6 +64,19 @@ function formatDate($date) {
     return $months[$month] . ' ' . $year;
 }
 
+
+/**
+ * Génère un slug SEO-friendly à partir d'une chaîne
+ * @param string $text
+ * @return string
+ */
+function slugify($text) {
+    $text = strtolower(trim($text));
+    $text = preg_replace('/[^a-z0-9\s-]/u', '', $text); // retire caractères spéciaux
+    $text = preg_replace('/[\s-]+/', '-', $text); // espaces/traits multiples -> 1 tiret
+    $text = trim($text, '-');
+    return $text;
+}
 /**
  * Récupère les données du profil
  * @param PDO $db Instance de connexion PDO
@@ -92,7 +106,14 @@ function getProjects($db) {
         $query = "SELECT * FROM projects ORDER BY created_at DESC";
         $stmt = $db->prepare($query);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $projects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Ajoute un slug à la volée si absent
+        foreach ($projects as &$proj) {
+            if (empty($proj['slug'])) {
+                $proj['slug'] = slugify($proj['title']);
+            }
+        }
+        return $projects;
     } catch(PDOException $e) {
         if(DEBUGGING) {
             echo "Erreur : " . $e->getMessage();
@@ -140,18 +161,30 @@ function getExperience($db) {
 }
 
 /**
- * Récupère les détails d'un projet spécifique
+ * Récupère les détails d'un projet par slug
  * @param PDO $db Instance de connexion PDO
- * @param string $project_url URL du projet
+ * @param string $slug Slug du projet
  * @return array|null Données du projet ou null si non trouvé
  */
-function getProjectDetails($db, $project_url) {
+function getProjectDetails($db, $slug) {
     try {
-        $query = "SELECT * FROM projects WHERE project_url = :project_url LIMIT 1";
+        $query = "SELECT * FROM projects WHERE slug = :slug LIMIT 1";
         $stmt = $db->prepare($query);
-        $stmt->bindParam(':project_url', $project_url);
+        $stmt->bindParam(':slug', $slug);
         $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $proj = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Si pas de slug (données anciennes), fallback sur project_url
+        if (!$proj) {
+            $query2 = "SELECT * FROM projects WHERE project_url = :slug LIMIT 1";
+            $stmt2 = $db->prepare($query2);
+            $stmt2->bindParam(':slug', $slug);
+            $stmt2->execute();
+            $proj = $stmt2->fetch(PDO::FETCH_ASSOC);
+            if ($proj && empty($proj['slug'])) {
+                $proj['slug'] = slugify($proj['title']);
+            }
+        }
+        return $proj;
     } catch(PDOException $e) {
         if(DEBUGGING) {
             echo "Erreur : " . $e->getMessage();

@@ -46,33 +46,72 @@
 ## Structure du Projet
 
 ```
-porteflio-with-back-end/
-├── config.php                 # Configuration centralisée (BDD, URL, locale, debug)
-├── index.php                  # Page d'accueil — sections : hero, services, skills, projets, expérience, blog, contact
-├── project.php                # Page détaillée projet + système de commentaires
-├── blog.php                   # Page article de blog (slug-based routing)
-├── login.php                  # Authentification utilisateur
-├── register.php               # Inscription avec validation
-├── logout.php                 # Déconnexion + destruction de session
-├── database.sql               # Script DDL + données initiales (structure complète)
-│
-├── includes/
-│   ├── Database.php           # Classe singleton PDO — connexion centralisée
-│   ├── functions.php          # Fonctions métier : profil, projets, skills, blog, commentaires
-│   ├── handle_comment.php     # Traitement POST des commentaires (validation + insertion)
-│   └── delete_comment.php     # Suppression de commentaires (vérification propriétaire)
-│
-├── assets/
-│   ├── css/styles.css         # ~3000 lignes : variables CSS, composants, responsive, dark mode
-│   ├── js/main.js             # Navbar scroll, typing animation, carousel, stats counter, smooth scroll
-│   ├── images/                # Photos de profil et captures projets
-│   ├── fontawesome/           # FontAwesome 6 (JS → SVG inline)
-│   ├── plugins/               # Bootstrap 5, Popper, Dark Mode Switch, GitHub integrations
-│   └── scss/                  # Sources SCSS (variables, mixins, responsive, dark mode)
-│
-└── README.md
+### 📁 Répertoires
+```
+✓ includes/          - PHP classes & functions (protected by .htaccess)
+  - Database.php     - PDO database connection
+  - functions.php    - Utility functions
+  - handle_*.php     - AJAX handlers
+  - delete_comment.php - Comment deletion
+
+✓ assets/            - Static files
+  - css/             - Stylesheets
+  - js/              - JavaScript
+  - fontawesome/     - Icon library
+  - images/          - Project/blog images
+  - plugins/         - Third-party plugins
 ```
 
+### 📚 Documentation
+```
+✓ README.md          - Project information
+✓ LICENSE            - Legal information
+✓ favicon.ico        - Browser tab icon
+```
+
+---
+
+## 🔐 SÉCURITÉ & .gitignore
+
+Créé un `.gitignore` pour éviter d'accidentellement commiter:
+- Fichiers sensibles (config.php, *.sql)
+- Logs et fichiers temporaires
+- Documentation interne (AUDIT_REPORT.md, etc.)
+- Fichiers IDE/OS
+- Archives (*.zip, *.rar)
+
+---
+
+## 📊 STRUCTURE FINALE
+
+```
+porteflio-with-back-end/
+├── .git/                 (Version control)
+├── .gitignore            (NEW - Git exclude rules)
+├── .htaccess             (Apache config + Security)
+├── config.php            (Production config)
+├── favicon.ico           (Browser icon)
+├── index.php             (Homepage)
+├── blog.php              (Blog articles)
+├── project.php           (Project details)
+├── login.php             (Auth)
+├── register.php          (Auth)
+├── logout.php            (Auth)
+├── sitemap.php           (Dynamic sitemap)
+├── robots.txt            (SEO)
+├── README.md             (Documentation)
+├── LICENSE               (Legal)
+├── assets/
+│   ├── css/              (Stylesheets)
+│   ├── js/               (JavaScript)
+│   ├── fontawesome/      (Icons)
+│   ├── images/           (Images)
+│   └── plugins/          (3rd party)
+└── includes/             (Protected by .htaccess)
+    ├── Database.php
+    ├── functions.php
+    ├── handle_*.php
+    └── delete_comment.php
 ---
 
 ## Fonctionnalités

@@ -937,81 +937,180 @@ img {
 /* ======= Stack & Outils ======= */
 .stack-section {
   background: var(--bg-section-alt);
+  overflow: hidden;
 }
 
-.stack-category {
-  margin-bottom: 2rem;
-  text-align: center;
+/* ===== Bento Grid ===== */
+.stack-bento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 960px;
+  margin: 0 auto;
 }
 
-.stack-category:last-child {
-  margin-bottom: 0;
-}
-
-.stack-category-title {
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.stack-category-title i {
-  color: var(--primary);
-  font-size: 1rem;
-}
-
-.stack-icons {
-  display: flex;
-  justify-content: center;
-  padding: 16px 0;
-}
-
-.stack-icons img {
-  max-width: 100%;
-  height: auto;
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1));
-  transition: transform 0.3s ease;
-}
-
-.stack-icons img:hover {
-  transform: scale(1.05);
-}
-
-.stack-icons-custom {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  padding: 16px 0;
-}
-
-.stack-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
+/* ===== Panel (card) ===== */
+.stack-panel {
+  position: relative;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  font-size: 0.9rem;
-  font-weight: 500;
+  border-radius: 20px;
+  padding: 28px 24px 24px;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s ease;
+}
+
+.stack-panel:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(99, 102, 241, 0.12);
+}
+
+/* Large panel spans full width */
+.stack-panel-lg {
+  grid-column: 1 / -1;
+}
+
+/* Animated gradient glow on hover */
+.stack-panel-glow {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(from 0deg, #6366f1, #06b6d4, #a855f7, #6366f1);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.4s ease;
+  filter: blur(1px);
+}
+
+.stack-panel:hover .stack-panel-glow {
+  opacity: 1;
+  animation: stack-glow-spin 4s linear infinite;
+}
+
+@keyframes stack-glow-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Panel inner bg to mask the glow except at edges */
+.stack-panel::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 19px;
+  background: var(--bg-card);
+  z-index: -1;
+}
+
+/* ===== Panel Header ===== */
+.stack-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stack-panel-header h4 {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--text-primary);
+  margin: 0;
+  flex: 1;
+}
+
+.stack-panel-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(99, 102, 241, 0.05));
+  color: #6366f1;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.stack-panel-icon--cyan {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(6, 182, 212, 0.05));
+  color: #06b6d4;
+}
+
+.stack-panel-icon--amber {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+  color: #f59e0b;
+}
+
+.stack-panel-icon--rose {
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(244, 63, 94, 0.05));
+  color: #f43f5e;
+}
+
+.stack-panel-count {
+  font-family: var(--font-code, 'JetBrains Mono', monospace);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-section-alt);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+}
+
+/* ===== Tech Items inside panel ===== */
+.stack-panel-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.stack-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 8px 10px;
+  background: var(--bg-section-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
   transition: all 0.3s ease;
+  cursor: default;
 }
 
-.stack-badge:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(99,102,241,0.15);
+.stack-item:hover {
   border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.06);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
 }
 
-.stack-badge i {
-  font-size: 1.2rem;
-  color: var(--primary);
+.stack-item img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.stack-item span {
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+/* FontAwesome icon items (Data category) */
+.stack-item--fa i {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  flex-shrink: 0;
 }
 
 
@@ -4454,14 +4553,32 @@ body.dark-mode .stat-label {
   color: var(--text-muted);
 }
 
-body.dark-mode .stack-badge {
+body.dark-mode .stack-panel {
   background: var(--bg-card);
   border-color: var(--border-color);
-  color: var(--text-primary);
 }
 
-body.dark-mode .stack-icons img {
-  filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+body.dark-mode .stack-panel::after {
+  background: var(--bg-card);
+}
+
+body.dark-mode .stack-panel:hover {
+  box-shadow: 0 20px 50px rgba(99, 102, 241, 0.18);
+}
+
+body.dark-mode .stack-item {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .stack-item:hover {
+  background: rgba(99, 102, 241, 0.1);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+body.dark-mode .stack-panel-count {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-color);
 }
 
 body.dark-mode .skills-overview {
@@ -4629,8 +4746,30 @@ body.dark-mode .btn-primary {
     justify-content: center;
   }
 
-  .stack-icons img {
-    max-width: 280px;
+  .stack-bento {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .stack-panel {
+    padding: 20px 16px 18px;
+  }
+
+  .stack-panel-items {
+    gap: 8px;
+  }
+
+  .stack-item {
+    padding: 6px 10px 6px 8px;
+  }
+
+  .stack-item img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .stack-item span {
+    font-size: 0.76rem;
   }
 
   .stats-bar .row {

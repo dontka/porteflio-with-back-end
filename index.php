@@ -264,38 +264,78 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                 <div class="title-line"></div>
             </div>
 
-            <!-- Développement : Langages, Frameworks & Base de données -->
-            <div class="stack-category">
-                <h4 class="stack-category-title"><i class="fas fa-code"></i> Langages, Frameworks & Base de données</h4>
-                <div class="stack-icons">
-                    <img src="https://skillicons.dev/icons?i=php,laravel,python,django,js,jquery,html,css,kotlin,mysql,bootstrap&perline=11" alt="Langages et Frameworks" loading="lazy">
+            <div class="stack-bento">
+                <!-- Développement — large card -->
+                <div class="stack-panel stack-panel-lg" data-tilt>
+                    <div class="stack-panel-glow"></div>
+                    <div class="stack-panel-header">
+                        <span class="stack-panel-icon"><i class="fas fa-code"></i></span>
+                        <h4>Développement</h4>
+                        <span class="stack-panel-count">11</span>
+                    </div>
+                    <div class="stack-panel-items">
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=php" alt="PHP" width="40" height="40" loading="lazy"><span>PHP</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=laravel" alt="Laravel" width="40" height="40" loading="lazy"><span>Laravel</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=python" alt="Python" width="40" height="40" loading="lazy"><span>Python</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=django" alt="Django" width="40" height="40" loading="lazy"><span>Django</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=js" alt="JavaScript" width="40" height="40" loading="lazy"><span>JavaScript</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=jquery" alt="jQuery" width="40" height="40" loading="lazy"><span>jQuery</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=html" alt="HTML5" width="40" height="40" loading="lazy"><span>HTML5</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=css" alt="CSS3" width="40" height="40" loading="lazy"><span>CSS3</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=kotlin" alt="Kotlin" width="40" height="40" loading="lazy"><span>Kotlin</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=mysql" alt="MySQL" width="40" height="40" loading="lazy"><span>MySQL</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=bootstrap" alt="Bootstrap" width="40" height="40" loading="lazy"><span>Bootstrap</span></div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Outils & Environnement de développement -->
-            <div class="stack-category">
-                <h4 class="stack-category-title"><i class="fas fa-tools"></i> Outils & Environnement de développement</h4>
-                <div class="stack-icons">
-                    <img src="https://skillicons.dev/icons?i=vscode,git,github,powershell,npm&perline=8" alt="Outils de développement" loading="lazy">
+                <!-- Cloud & DevOps -->
+                <div class="stack-panel" data-tilt>
+                    <div class="stack-panel-glow"></div>
+                    <div class="stack-panel-header">
+                        <span class="stack-panel-icon stack-panel-icon--cyan"><i class="fas fa-cloud"></i></span>
+                        <h4>Cloud & DevOps</h4>
+                        <span class="stack-panel-count">5</span>
+                    </div>
+                    <div class="stack-panel-items">
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=docker" alt="Docker" width="40" height="40" loading="lazy"><span>Docker</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=linux" alt="Linux" width="40" height="40" loading="lazy"><span>Linux</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=aws" alt="AWS" width="40" height="40" loading="lazy"><span>AWS</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=nginx" alt="Nginx" width="40" height="40" loading="lazy"><span>Nginx</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=githubactions" alt="CI/CD" width="40" height="40" loading="lazy"><span>CI/CD</span></div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Cloud & DevOps -->
-            <div class="stack-category">
-                <h4 class="stack-category-title"><i class="fas fa-cloud"></i> Cloud & DevOps</h4>
-                <div class="stack-icons">
-                    <img src="https://skillicons.dev/icons?i=docker,linux,aws,nginx,githubactions&perline=8" alt="Cloud et DevOps" loading="lazy">
+                <!-- Outils -->
+                <div class="stack-panel" data-tilt>
+                    <div class="stack-panel-glow"></div>
+                    <div class="stack-panel-header">
+                        <span class="stack-panel-icon stack-panel-icon--amber"><i class="fas fa-tools"></i></span>
+                        <h4>Outils</h4>
+                        <span class="stack-panel-count">5</span>
+                    </div>
+                    <div class="stack-panel-items">
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=vscode" alt="VS Code" width="40" height="40" loading="lazy"><span>VS Code</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=git" alt="Git" width="40" height="40" loading="lazy"><span>Git</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=github" alt="GitHub" width="40" height="40" loading="lazy"><span>GitHub</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=powershell" alt="PowerShell" width="40" height="40" loading="lazy"><span>PowerShell</span></div>
+                        <div class="stack-item"><img src="https://skillicons.dev/icons?i=npm" alt="NPM" width="40" height="40" loading="lazy"><span>NPM</span></div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Data & Analyse -->
-            <div class="stack-category">
-                <h4 class="stack-category-title"><i class="fas fa-chart-pie"></i> Data & Analyse</h4>
-                <div class="stack-icons-custom">
-                    <div class="stack-badge" title="Power BI"><i class="fas fa-chart-bar"></i><span>Power BI</span></div>
-                    <div class="stack-badge" title="SPSS"><i class="fas fa-calculator"></i><span>SPSS</span></div>
-                    <div class="stack-badge" title="KOBO Collect"><i class="fas fa-clipboard-list"></i><span>KOBO Collect</span></div>
-                    <div class="stack-badge" title="Excel"><i class="fas fa-file-excel"></i><span>Excel</span></div>
+                <!-- Data & Analyse -->
+                <div class="stack-panel" data-tilt>
+                    <div class="stack-panel-glow"></div>
+                    <div class="stack-panel-header">
+                        <span class="stack-panel-icon stack-panel-icon--rose"><i class="fas fa-chart-pie"></i></span>
+                        <h4>Data & Analyse</h4>
+                        <span class="stack-panel-count">4</span>
+                    </div>
+                    <div class="stack-panel-items">
+                        <div class="stack-item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/powerbi.svg" alt="Power BI" width="32" height="32" loading="lazy"><span>Power BI</span></div>
+                        <div class="stack-item"><span style="font-size:1.7em;vertical-align:middle;">SPSS</span></div>
+                        <div class="stack-item"><span style="font-size:1.7em;vertical-align:middle;">KOBO Collect</span></div>
+                        <div class="stack-item"><img src="https://cdn.jsdelivr.net/npm/simple-icons@v9/icons/microsoftexcel.svg" alt="Excel" width="32" height="32" loading="lazy"><span>Excel</span></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -525,7 +565,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                             </div>
                             <div class="d-flex gap-3 flex-wrap">
                                 <a href="<?php echo sanitizeOutput($featured['project_url']); ?>" class="btn btn-primary-custom" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i> Voir le projet</a>
-                                <a href="projet/<?php echo urlencode($featured['project_url']); ?>" class="btn btn-outline-custom"><i class="fas fa-info-circle"></i> Détails</a>
+                                <a href="projet/<?php echo sanitizeOutput($featured['slug'] ?? slugify($featured['title'])); ?>" class="btn btn-outline-custom"><i class="fas fa-info-circle"></i> Détails</a>
                             </div>
                         </div>
                     </div>
@@ -539,7 +579,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                     <div class="project-card">
                         <?php if (!empty($proj['image_url'])): ?>
                         <div class="project-card-image">
-                            <a href="projet/<?php echo urlencode($proj['project_url']); ?>">
+                            <a href="projet/<?php echo sanitizeOutput($proj['slug'] ?? slugify($proj['title'])); ?>">
                                 <?php echo pictureTag(sanitizeOutput($proj['image_url']), sanitizeOutput($proj['title']), 'loading="lazy" width="400" height="260"'); ?>
                             </a>
                         </div>
@@ -549,7 +589,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                         </div>
                         <?php endif; ?>
                         <div class="project-card-body">
-                            <h4><a href="projet/<?php echo urlencode($proj['project_url']); ?>"><?php echo sanitizeOutput($proj['title']); ?></a></h4>
+                            <h4><a href="projet/<?php echo sanitizeOutput($proj['slug'] ?? slugify($proj['title'])); ?>"><?php echo sanitizeOutput($proj['title']); ?></a></h4>
                             <p><?php echo mb_strimwidth(sanitizeOutput($proj['description']), 0, 120, '...'); ?></p>
                             <div class="card-engagement">
                                 <?php
@@ -560,7 +600,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                                 <span class="engagement-badge" title="Commentaires"><i class="far fa-comment-dots"></i> <?php echo $pComments; ?></span>
                                 <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $pLikes; ?></span>
                             </div>
-                            <a href="projet/<?php echo urlencode($proj['project_url']); ?>" class="project-link"><i class="fas fa-arrow-right"></i> En savoir plus</a>
+                            <a href="projet/<?php echo sanitizeOutput($proj['slug'] ?? slugify($proj['title'])); ?>" class="project-link"><i class="fas fa-arrow-right"></i> En savoir plus</a>
                         </div>
                     </div>
                 </div>
@@ -663,7 +703,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                                 <i class="far fa-calendar-alt"></i>
                                 <?php echo date('d M Y', strtotime($featuredPost['created_at'])); ?>
                             </div>
-                            <h3><a href="blog/<?php echo urlencode($featuredPost['slug']); ?>"><?php echo sanitizeOutput($featuredPost['title']); ?></a></h3>
+                            <h3><a href="blog/<?php echo sanitizeOutput($featuredPost['slug']); ?>"><?php echo sanitizeOutput($featuredPost['title']); ?></a></h3>
                             <p><?php echo sanitizeOutput($featuredPost['excerpt']); ?></p>
                             <div class="card-engagement">
                                 <?php
@@ -673,7 +713,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                                 <span class="engagement-badge" title="Commentaires"><i class="far fa-comment-dots"></i> <?php echo $bComments; ?></span>
                                 <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $bLikes; ?></span>
                             </div>
-                            <a href="blog/<?php echo urlencode($featuredPost['slug']); ?>" class="btn btn-primary-custom btn-sm">
+                            <a href="blog/<?php echo sanitizeOutput($featuredPost['slug']); ?>" class="btn btn-primary-custom btn-sm">
                                 <i class="fas fa-arrow-right"></i> Lire l'article
                             </a>
                         </div>
@@ -696,7 +736,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                                 <span class="blog-feed-category"><?php echo sanitizeOutput($post['category']); ?></span>
                                 <span class="blog-feed-date"><i class="far fa-clock"></i> <?php echo date('d M Y', strtotime($post['created_at'])); ?></span>
                             </div>
-                            <h4><a href="blog/<?php echo urlencode($post['slug']); ?>"><?php echo sanitizeOutput($post['title']); ?></a></h4>
+                            <h4><a href="blog/<?php echo sanitizeOutput($post['slug']); ?>"><?php echo sanitizeOutput($post['title']); ?></a></h4>
                             <p><?php echo mb_strimwidth(sanitizeOutput($post['excerpt']), 0, 150, '...'); ?></p>
                             <div class="card-engagement">
                                 <?php
@@ -706,7 +746,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                                 <span class="engagement-badge" title="Commentaires"><i class="far fa-comment-dots"></i> <?php echo $bC; ?></span>
                                 <span class="engagement-badge" title="Likes"><i class="far fa-heart"></i> <?php echo $bL; ?></span>
                             </div>
-                            <a href="blog/<?php echo urlencode($post['slug']); ?>" class="blog-read-more">
+                            <a href="blog/<?php echo sanitizeOutput($post['slug']); ?>" class="blog-read-more">
                                 Lire la suite <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>

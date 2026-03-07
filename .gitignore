@@ -1,0 +1,50 @@
+# 🔒 .gitignore - Portfolio Production
+
+# Configuration
+config.php
+config.local.php
+
+# Database & Migrations
+*.sql
+database_backup.sql
+migrations_prod.sql
+
+# Logs & Cache
+/logs/
+*.log
+
+# Uploads (if added later)
+/uploads/
+/storage/cache/
+
+# IDE & OS
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+*.sublime-workspace
+
+# Dependencies
+/vendor/
+node_modules/
+
+# Temporary Files
+*.tmp
+*.temp
+*.bak
+*.zip
+*.rar
+
+# Documentation (keep in git repo, exclude from production)
+AUDIT_REPORT.md
+DEPLOYMENT_GUIDE.md
+PRODUCTION_CHECKLIST.md
+config.prod.php
+cv_donatien_kanane.md
+
+# Test Files
+test_*.php
+*_test.php

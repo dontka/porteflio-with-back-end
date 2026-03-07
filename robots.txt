@@ -6,6 +6,5 @@ Disallow: /register.php
 Disallow: /logout.php
 Disallow: /config.php
 Disallow: /test_db.php
-Disallow: /sitemap.xml
 
-Sitemap: http://localhost/porteflio-with-back-end/sitemap.php
+Sitemap: http://localhost/porteflio-with-back-end/sitemap.xml

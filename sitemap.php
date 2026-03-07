@@ -17,20 +17,20 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-        <loc><?php echo sanitizeOutput($systemUrl); ?></loc>
+        <loc><?php echo sanitizeOutput(rtrim($systemUrl, '/') . '/'); ?></loc>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
 <?php foreach ($projects as $project): ?>
     <url>
-        <loc><?php echo sanitizeOutput($systemUrl . 'project.php?url=' . urlencode($project['project_url'])); ?></loc>
+        <loc><?php echo sanitizeOutput(rtrim($systemUrl, '/') . '/projet/' . urlencode($project['slug'] ?? slugify($project['title']))); ?></loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
 <?php endforeach; ?>
 <?php foreach ($blogPosts as $post): ?>
     <url>
-        <loc><?php echo sanitizeOutput($systemUrl . 'blog.php?slug=' . urlencode($post['slug'])); ?></loc>
+        <loc><?php echo sanitizeOutput(rtrim($systemUrl, '/') . '/blog/' . urlencode($post['slug'])); ?></loc>
         <lastmod><?php echo date('Y-m-d', strtotime($post['updated_at'] ?? $post['created_at'])); ?></lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>

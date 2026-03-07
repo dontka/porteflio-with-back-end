@@ -11,8 +11,21 @@ $db = $database->getConnection();
 
 // Récupération des données
 $profile = getProfileData($db);
-$project_url = isset($_GET['url']) ? $_GET['url'] : '';
-$project = getProjectDetails($db, $project_url);
+
+$slug = '';
+if (isset($_GET['url'])) {
+    $slug = $_GET['url'];
+} else if (isset($_GET['slug'])) {
+    $slug = $_GET['slug'];
+} else if (!empty($_SERVER['REQUEST_URI'])) {
+    // SEO: récupère le slug depuis l'URL /projet/slug
+    $parts = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
+    $slugIdx = array_search('projet', $parts);
+    if ($slugIdx !== false && isset($parts[$slugIdx+1])) {
+        $slug = $parts[$slugIdx+1];
+    }
+}
+$project = getProjectDetails($db, $slug);
 
 // Si le projet n'existe pas, rediriger vers la page d'accueil
 if (!$project) {
@@ -28,8 +41,8 @@ $locale = getDefaultLocale();
 <?php
 $projectTitle = sanitizeOutput($project['title']) . ' — Donatien KANANE';
 $projectDesc = sanitizeOutput($project['description']);
-$projectUrl = $systemUrl . 'projet/' . urlencode($project_url);
-$projectImage = !empty($project['image']) ? $systemUrl . sanitizeOutput($project['image']) : $systemUrl . 'assets/images/profile.png';
+$projectUrl = $systemUrl . 'projet/' . sanitizeOutput($project['slug']);
+$projectImage = !empty($project['image_url']) ? $systemUrl . sanitizeOutput($project['image_url']) : $systemUrl . 'assets/images/profile.png';
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo substr($locale, 0, 2); ?>">
@@ -95,19 +108,19 @@ $projectImage = !empty($project['image']) ? $systemUrl . sanitizeOutput($project
     <!-- ===== NAVIGATION ===== -->
     <nav class="navbar-top scrolled" id="navbar" aria-label="Navigation principale">
         <div class="container d-flex align-items-center justify-content-between">
-            <a href="index.php" class="nav-brand">DK<span>.</span></a>
+            <a href="/" class="nav-brand">DK<span>.</span></a>
             <ul class="nav-links d-none d-md-flex" role="menubar">
-                <li role="none"><a href="index.php#projects" role="menuitem">Projets</a></li>
-                <li role="none"><a href="index.php#skills" role="menuitem">Compétences</a></li>
-                <li role="none"><a href="index.php#experience" role="menuitem">Expérience</a></li>
-                <li role="none"><a href="index.php#contact" role="menuitem">Contact</a></li>
+                <li role="none"><a href="/#projects" role="menuitem">Projets</a></li>
+                <li role="none"><a href="/#skills" role="menuitem">Compétences</a></li>
+                <li role="none"><a href="/#experience" role="menuitem">Expérience</a></li>
+                <li role="none"><a href="/#contact" role="menuitem">Contact</a></li>
             </ul>
             <div class="nav-actions d-flex align-items-center gap-3">
                 <div class="form-check form-switch mb-0">
                     <input type="checkbox" class="form-check-input" id="darkSwitch" aria-label="Activer le mode sombre" />
                     <label class="form-check-label" for="darkSwitch"><i class="fas fa-moon"></i></label>
                 </div>
-                <a class="btn btn-primary-custom btn-sm" href="index.php"><i class="fas fa-arrow-left"></i> Retour</a>
+                <a class="btn btn-primary-custom btn-sm" href="/"><i class="fas fa-arrow-left"></i> Retour</a>
             </div>
         </div>
     </nav>
@@ -122,7 +135,7 @@ $projectImage = !empty($project['image']) ? $systemUrl . sanitizeOutput($project
         </div>
         <div class="container">
             <div class="project-hero-content">
-                <a href="index.php#projects" class="project-hero-back"><i class="fas fa-arrow-left"></i> Tous les projets</a>
+                <a href="/#projects" class="project-hero-back"><i class="fas fa-arrow-left"></i> Tous les projets</a>
                 <h1><?php echo sanitizeOutput($project['title']); ?></h1>
                 <div class="project-hero-meta">
                     <?php if ($project['is_featured']): ?>
@@ -347,9 +360,9 @@ $projectImage = !empty($project['image']) ? $systemUrl . sanitizeOutput($project
                 <div class="project-sidebar-card">
                     <h4><i class="fas fa-share-alt"></i> Partager</h4>
                     <div class="sidebar-share-links">
-                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($systemUrl . 'projet/' . urlencode($project['project_url'])); ?>" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($systemUrl . 'projet/' . urlencode($project['project_url'])); ?>&text=<?php echo urlencode($project['title']); ?>" target="_blank" rel="noopener noreferrer" class="share-btn twitter" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="mailto:?subject=<?php echo urlencode($project['title']); ?>&body=<?php echo urlencode($systemUrl . 'projet/' . urlencode($project['project_url'])); ?>" class="share-btn email" title="Email"><i class="fas fa-envelope"></i></a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($systemUrl . 'projet/' . $project['slug']); ?>" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://twitter.com/intent/tweet?url=<?php echo urlencode($systemUrl . 'projet/' . $project['slug']); ?>&text=<?php echo urlencode($project['title']); ?>" target="_blank" rel="noopener noreferrer" class="share-btn twitter" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="mailto:?subject=<?php echo urlencode($project['title']); ?>&body=<?php echo urlencode($systemUrl . 'projet/' . $project['slug']); ?>" class="share-btn email" title="Email"><i class="fas fa-envelope"></i></a>
                     </div>
                 </div>
             </div>

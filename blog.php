@@ -87,12 +87,12 @@ $blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']
     <!-- ===== NAVIGATION ===== -->
     <nav class="navbar-top scrolled" id="navbar" aria-label="Navigation principale">
         <div class="container d-flex align-items-center justify-content-between">
-            <a href="index.php" class="nav-brand">DK<span>.</span></a>
+            <a href="/" class="nav-brand">DK<span>.</span></a>
             <ul class="nav-links d-none d-md-flex" role="menubar">
-                <li role="none"><a href="index.php" role="menuitem">Accueil</a></li>
-                <li role="none"><a href="index.php#projects" role="menuitem">Projets</a></li>
-                <li role="none"><a href="index.php#blog" role="menuitem">Blog</a></li>
-                <li role="none"><a href="index.php#contact" role="menuitem">Contact</a></li>
+                <li role="none"><a href="/" role="menuitem">Accueil</a></li>
+                <li role="none"><a href="/#projects" role="menuitem">Projets</a></li>
+                <li role="none"><a href="/#blog" role="menuitem">Blog</a></li>
+                <li role="none"><a href="/#contact" role="menuitem">Contact</a></li>
             </ul>
             <div class="nav-actions d-flex align-items-center gap-3">
                 <div class="form-check form-switch mb-0">
@@ -113,7 +113,7 @@ $blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']
         </div>
         <div class="container">
             <div class="project-hero-content">
-                <a href="index.php#blog" class="project-hero-back">
+                <a href="/#blog" class="project-hero-back">
                     <i class="fas fa-arrow-left"></i> Retour au blog
                 </a>
                 <h1><?php echo sanitizeOutput($post['title']); ?></h1>
@@ -349,9 +349,9 @@ $blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']
                     <div class="project-sidebar-card">
                         <h4><i class="fas fa-share-nodes"></i> Partager</h4>
                         <div class="sidebar-share-links">
-                            <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($systemUrl . 'blog.php?slug=' . $post['slug']); ?>" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-                            <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode($post['title']); ?>&url=<?php echo urlencode($systemUrl . 'blog.php?slug=' . $post['slug']); ?>" target="_blank" rel="noopener noreferrer" class="share-btn twitter" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-                            <a href="mailto:?subject=<?php echo rawurlencode($post['title']); ?>&body=<?php echo rawurlencode($post['excerpt'] . "\n\n" . $systemUrl . 'blog.php?slug=' . $post['slug']); ?>" class="share-btn email" title="Email"><i class="fas fa-envelope"></i></a>
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo urlencode($systemUrl . 'blog/' . $post['slug']); ?>" target="_blank" rel="noopener noreferrer" class="share-btn linkedin" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="https://twitter.com/intent/tweet?text=<?php echo urlencode($post['title']); ?>&url=<?php echo urlencode($systemUrl . 'blog/' . $post['slug']); ?>" target="_blank" rel="noopener noreferrer" class="share-btn twitter" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                            <a href="mailto:?subject=<?php echo rawurlencode($post['title']); ?>&body=<?php echo rawurlencode($post['excerpt'] . "\n\n" . $systemUrl . 'blog/' . $post['slug']); ?>" class="share-btn email" title="Email"><i class="fas fa-envelope"></i></a>
                         </div>
                     </div>
                 </div>

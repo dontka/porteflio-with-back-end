@@ -164,7 +164,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                         <span class="hero-typed" id="typed-text"></span>
                         <span class="hero-cursor">|</span>
                     </div>
-                    <p class="hero-description"><?php echo sanitizeOutput($profile['description'] ?? ''); ?></p>
+                    <p class="hero-description"><?php echo sanitizeWYSIWYG($profile['description'] ?? ''); ?></p>
                     <div class="hero-cta">
                         <a href="#contact" class="btn btn-primary-custom"><i class="fas fa-paper-plane"></i> Me Contacter</a>
                         <a href="#projects" class="btn btn-outline-custom"><i class="fas fa-briefcase"></i> Voir mes projets</a>
@@ -553,7 +553,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                     <div class="col-lg-6">
                         <div class="featured-project-content">
                             <h3><?php echo sanitizeOutput($featured['title']); ?></h3>
-                            <p><?php echo nl2br(sanitizeOutput($featured['description'])); ?></p>
+                            <p><?php echo sanitizeWYSIWYG($featured['description']); ?></p>
                             <div class="card-engagement">
                                 <?php
                                     $fUrl = $featured['project_url'];
@@ -590,7 +590,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                         <?php endif; ?>
                         <div class="project-card-body">
                             <h4><a href="projet/<?php echo sanitizeOutput($proj['slug'] ?? slugify($proj['title'])); ?>"><?php echo sanitizeOutput($proj['title']); ?></a></h4>
-                            <p><?php echo mb_strimwidth(sanitizeOutput($proj['description']), 0, 120, '...'); ?></p>
+                            <p><?php echo mb_strimwidth(sanitizeWYSIWYG($proj['description']), 0, 120, '...'); ?></p>
                             <div class="card-engagement">
                                 <?php
                                     $pUrl = $proj['project_url'];
@@ -704,7 +704,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                                 <?php echo date('d M Y', strtotime($featuredPost['created_at'])); ?>
                             </div>
                             <h3><a href="blog/<?php echo sanitizeOutput($featuredPost['slug']); ?>"><?php echo sanitizeOutput($featuredPost['title']); ?></a></h3>
-                            <p><?php echo sanitizeOutput($featuredPost['excerpt']); ?></p>
+                            <p><?php echo sanitizeWYSIWYG($featuredPost['excerpt']); ?></p>
                             <div class="card-engagement">
                                 <?php
                                     $bComments = $blogStats[$featuredPost['slug']]['comments'] ?? 0;
@@ -737,7 +737,7 @@ $pageImage = $systemUrl . 'assets/images/profile.png';
                                 <span class="blog-feed-date"><i class="far fa-clock"></i> <?php echo date('d M Y', strtotime($post['created_at'])); ?></span>
                             </div>
                             <h4><a href="blog/<?php echo sanitizeOutput($post['slug']); ?>"><?php echo sanitizeOutput($post['title']); ?></a></h4>
-                            <p><?php echo mb_strimwidth(sanitizeOutput($post['excerpt']), 0, 150, '...'); ?></p>
+                            <p><?php echo mb_strimwidth(sanitizeWYSIWYG($post['excerpt']), 0, 150, '...'); ?></p>
                             <div class="card-engagement">
                                 <?php
                                     $bC = $blogStats[$post['slug']]['comments'] ?? 0;

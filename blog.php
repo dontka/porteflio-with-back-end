@@ -8,7 +8,22 @@ $database = new Database();
 $db = $database->getConnection();
 
 $profile = getProfileData($db);
-$slug = isset($_GET['slug']) ? $_GET['slug'] : '';
+
+// Récupération du slug
+$slug = '';
+if (isset($_GET['slug'])) {
+    $slug = $_GET['slug'];
+} elseif (isset($_GET['url'])) {
+    $slug = $_GET['url'];
+} elseif (!empty($_SERVER['REQUEST_URI'])) {
+    // SEO: récupère le slug depuis l'URL /blog/slug
+    $parts = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
+    $slugIdx = array_search('blog', $parts);
+    if ($slugIdx !== false && isset($parts[$slugIdx+1])) {
+        $slug = $parts[$slugIdx+1];
+    }
+}
+
 $post = getBlogPost($db, $slug);
 
 if (!$post) {
@@ -178,10 +193,10 @@ $blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']
                                 <h5>Rejoignez la conversation</h5>
                                 <p>Connectez-vous pour commenter, liker et répondre</p>
                                 <div class="d-flex gap-2 justify-content-center">
-                                    <a href="login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-primary-custom">
+                                    <a href="<?php echo $systemUrl; ?>login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-primary-custom">
                                         <i class="fas fa-sign-in-alt"></i> Se connecter
                                     </a>
-                                    <a href="register.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-outline-primary-custom">
+                                    <a href="<?php echo $systemUrl; ?>register.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-outline-primary-custom">
                                         <i class="fas fa-user-plus"></i> S'inscrire
                                     </a>
                                 </div>
@@ -389,6 +404,7 @@ $blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']
 
     <script>
     $(document).ready(function() {
+        const SYSTEM_URL = <?php echo json_encode($systemUrl); ?>;
         const BLOG_SLUG = <?php echo json_encode($post['slug']); ?>;
         const MAX_CHARS = 1000;
         const RING_CIRCUMFERENCE = 2 * Math.PI * 10;
@@ -508,7 +524,7 @@ $blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']
             if (!content) { showToast('warning', 'Veuillez entrer un commentaire'); return; }
             submitBtn.prop('disabled', true).html('<i class="fas fa-circle-notch fa-spin"></i> Envoi...');
             $.ajax({
-                url: 'includes/handle_comment.php',
+                url: SYSTEM_URL + 'includes/handle_comment.php',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ blog_slug: BLOG_SLUG, content: content, parent_id: parentId || null }),
@@ -576,7 +592,7 @@ $blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']
             const commentId = btn.data('comment-id');
             btn.addClass('like-pulse');
             $.ajax({
-                url: 'includes/handle_like.php',
+                url: SYSTEM_URL + 'includes/handle_like.php',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: commentId }),
@@ -628,7 +644,7 @@ $blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']
             if (!content) { showToast('warning', 'Le commentaire ne peut pas être vide'); return; }
             submitBtn.prop('disabled', true).html('<i class="fas fa-circle-notch fa-spin"></i>');
             $.ajax({
-                url: 'includes/handle_edit_comment.php',
+                url: SYSTEM_URL + 'includes/handle_edit_comment.php',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: commentId, content: content }),
@@ -663,7 +679,7 @@ $blogImage = !empty($post['image']) ? $systemUrl . sanitizeOutput($post['image']
             const modal = $('#deleteModal');
             const commentCard = $(`.comment-card[data-comment-id="${deleteTarget}"]`);
             $.ajax({
-                url: 'includes/delete_comment.php',
+                url: SYSTEM_URL + 'includes/delete_comment.php',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: deleteTarget }),

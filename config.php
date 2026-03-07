@@ -4,6 +4,7 @@
     define("DB_PASSWORD", '');
     define("DB_HOST", 'localhost');
     define("DB_PORT", '3306');
+    define("SYST_URL", 'http://donatien-kanane.xo.je/');
     
     // Détecte automatiquement le domaine (localhost vs production)
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';

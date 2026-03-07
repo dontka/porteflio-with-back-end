@@ -195,10 +195,10 @@ $projectImage = !empty($project['image_url']) ? $systemUrl . sanitizeOutput($pro
                             <h5>Rejoignez la conversation</h5>
                             <p>Connectez-vous pour commenter, liker et répondre aux autres développeurs</p>
                             <div class="d-flex gap-2 justify-content-center">
-                                <a href="login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-primary-custom">
+                                <a href="<?php echo $systemUrl; ?>login.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-primary-custom">
                                     <i class="fas fa-sign-in-alt"></i> Se connecter
                                 </a>
-                                <a href="register.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-outline-primary-custom">
+                                <a href="<?php echo $systemUrl; ?>register.php?redirect=<?php echo urlencode($_SERVER['REQUEST_URI']); ?>" class="btn btn-outline-primary-custom">
                                     <i class="fas fa-user-plus"></i> S'inscrire
                                 </a>
                             </div>
@@ -392,6 +392,7 @@ $projectImage = !empty($project['image_url']) ? $systemUrl . sanitizeOutput($pro
     
     <script>
     $(document).ready(function() {
+        const SYSTEM_URL = <?php echo json_encode($systemUrl); ?>;
         const PROJECT_URL = <?php echo json_encode($project['project_url']); ?>;
         const MAX_CHARS = 1000;
         const RING_CIRCUMFERENCE = 2 * Math.PI * 10;
@@ -532,7 +533,7 @@ $projectImage = !empty($project['image_url']) ? $systemUrl . sanitizeOutput($pro
             submitBtn.prop('disabled', true).html('<i class="fas fa-circle-notch fa-spin"></i> Envoi...');
 
             $.ajax({
-                url: 'includes/handle_comment.php',
+                url: SYSTEM_URL + 'includes/handle_comment.php',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -623,7 +624,7 @@ $projectImage = !empty($project['image_url']) ? $systemUrl . sanitizeOutput($pro
             btn.addClass('like-pulse');
 
             $.ajax({
-                url: 'includes/handle_like.php',
+                url: SYSTEM_URL + 'includes/handle_like.php',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: commentId }),
@@ -690,7 +691,7 @@ $projectImage = !empty($project['image_url']) ? $systemUrl . sanitizeOutput($pro
             submitBtn.prop('disabled', true).html('<i class="fas fa-circle-notch fa-spin"></i>');
 
             $.ajax({
-                url: 'includes/handle_edit_comment.php',
+                url: SYSTEM_URL + 'includes/handle_edit_comment.php',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: commentId, content: content }),
@@ -726,7 +727,7 @@ $projectImage = !empty($project['image_url']) ? $systemUrl . sanitizeOutput($pro
             const commentCard = $(`.comment-card[data-comment-id="${deleteTarget}"]`);
 
             $.ajax({
-                url: 'includes/delete_comment.php',
+                url: SYSTEM_URL + 'includes/delete_comment.php',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: deleteTarget }),

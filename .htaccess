@@ -49,16 +49,24 @@ AddDefaultCharset UTF-8
 # URL Rewriting for clean/canonical URLs
 <IfModule mod_rewrite.c>
     RewriteEngine On
+    
+    # Obtenir le chemin réel (fonctionne pour localhost et production)
+    # Pour Laragon: /porteflio-with-back-end/...
+    # Pour production: /...
     RewriteBase /
-
+    
     # Skip rewriting for existing files and directories (assets, images, etc.)
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
     # /blog/{slug} → blog.php?slug={slug}
-    RewriteRule ^blog/([a-zA-Z0-9_-]+)/?$ blog.php?slug=$1 [L,QSA]
+    # Match: /blog/mon-article ou /porteflio-with-back-end/blog/mon-article
+    RewriteCond %{REQUEST_URI} ^(.*/)?blog/([a-zA-Z0-9_-]+)/?$
+    RewriteRule ^(.*/)?blog/([a-zA-Z0-9_-]+)/?$ blog.php?slug=$2 [L,QSA]
 
     # /projet/{slug} → project.php?slug={slug}
-    RewriteRule ^projet/([a-zA-Z0-9_-]+)/?$ project.php?slug=$1 [L,QSA]
+    # Match: /projet/mon-projet ou /porteflio-with-back-end/projet/mon-projet
+    RewriteCond %{REQUEST_URI} ^(.*/)?projet/([a-zA-Z0-9_-]+)/?$
+    RewriteRule ^(.*/)?projet/([a-zA-Z0-9_-]+)/?$ project.php?slug=$2 [L,QSA]
 </IfModule>

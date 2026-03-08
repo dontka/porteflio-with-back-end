@@ -246,6 +246,68 @@ img {
   color: var(--text-secondary);
 }
 
+/* Dark mode toggle button */
+.dark-mode-toggle {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.dark-mode-toggle:hover {
+  color: rgba(255,255,255,1);
+  background-color: rgba(255,255,255,0.1);
+}
+
+.navbar-top.scrolled .dark-mode-toggle {
+  color: var(--text-secondary);
+}
+
+.navbar-top.scrolled .dark-mode-toggle:hover {
+  color: var(--text-primary);
+  background-color: rgba(0,0,0,0.1);
+}
+
+/* Mobile menu burger button */
+.mobile-menu-burger {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.mobile-menu-burger:hover {
+  color: rgba(255,255,255,1);
+  background-color: rgba(255,255,255,0.1);
+}
+
+.mobile-menu-burger.open {
+  color: var(--primary);
+}
+
+.navbar-top.scrolled .mobile-menu-burger {
+  color: var(--text-secondary);
+}
+
+.navbar-top.scrolled .mobile-menu-burger:hover {
+  color: var(--text-primary);
+  background-color: rgba(0,0,0,0.1);
+}
+
 /* Mobile nav toggle */
 .nav-toggle {
   display: flex;
@@ -4908,6 +4970,24 @@ body.dark-mode .btn-primary {
   border-color: transparent;
 }
 
+/* ======= System Dark Mode Preference ======= */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-body: #0f172a;
+    --bg-card: #1e293b;
+    --bg-section-alt: #0c1222;
+    --bg-dark: #060b18;
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border-color: #334155;
+    --border-light: #1e293b;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.25);
+    --shadow-lg: 0 10px 25px rgba(0,0,0,0.3);
+  }
+}
+
 /* ======= Responsive ======= */
 @media (max-width: 991px) {
   .timeline::before {
@@ -5139,8 +5219,29 @@ body.dark-mode .btn-primary {
     padding: 20px;
   }
 
-  .nav-links {
-    gap: 4px;
+  .featured-project-image {
+    margin-bottom: 20px;
+  }
+
+  .featured-project-image img {
+    max-height: 300px;
+    object-fit: cover;
+  }
+
+  .featured-project-content h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .project-card-image {
+    height: 180px;
+    width: 100%;
   }
 
   .nav-links a {

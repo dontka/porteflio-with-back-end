@@ -223,19 +223,32 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== Dark mode =====
     var darkSwitch = document.getElementById('darkSwitch');
     if (darkSwitch) {
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            document.body.classList.add('dark-mode');
-            darkSwitch.checked = true;
-        }
+        // Synchroniser le checkbox avec l'état actuel du body
+        darkSwitch.checked = document.body.classList.contains('dark-mode');
+        
+        // Écouter les changements du checkbox
         darkSwitch.addEventListener('change', function() {
             if (this.checked) {
                 document.body.classList.add('dark-mode');
                 localStorage.setItem('darkMode', 'enabled');
             } else {
                 document.body.classList.remove('dark-mode');
-                localStorage.setItem('darkMode', null);
+                localStorage.setItem('darkMode', 'disabled');
             }
         });
+        
+        // Écouter les changements de préférence système (seulement si localStorage vide)
+        if (window.matchMedia && localStorage.getItem('darkMode') === null) {
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                if (e.matches) {
+                    document.body.classList.add('dark-mode');
+                    darkSwitch.checked = true;
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    darkSwitch.checked = false;
+                }
+            });
+        }
     }
 
     // ===== Smooth scroll for anchor links =====

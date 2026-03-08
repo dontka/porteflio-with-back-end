@@ -135,6 +135,13 @@ function slugify($text) {
  * @return array|null Données du profil ou null en cas d'erreur
  */
 function getProfileData($db) {
+    if ($db === null) {
+        if(DEBUGGING) {
+            echo "Erreur: Base de données non connectée";
+        }
+        return null;
+    }
+    
     try {
         $query = "SELECT * FROM profile LIMIT 1";
         $stmt = $db->prepare($query);
@@ -142,7 +149,7 @@ function getProfileData($db) {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     } catch(PDOException $e) {
         if(DEBUGGING) {
-            echo "Erreur : " . $e->getMessage();
+            echo "Erreur getProfileData : " . $e->getMessage();
         }
         return null;
     }

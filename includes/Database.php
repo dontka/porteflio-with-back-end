@@ -11,6 +11,7 @@ class Database {
     private $password = DB_PASSWORD; // Mot de passe
     private $port = DB_PORT;      // Port de la base de données
     private $conn;                // Instance de connexion PDO
+    private $error;               // Stocke les erreurs de connexion
 
     /**
      * Établit la connexion à la base de données
@@ -18,26 +19,46 @@ class Database {
      */
     public function getConnection() {
         $this->conn = null;
+        $this->error = null;
 
         try {
             // Création de la chaîne de connexion DSN
+            $dsn = "mysql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name . ";charset=utf8mb4";
+            
             $this->conn = new PDO(
-                "mysql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name,
+                $dsn,
                 $this->username,
-                $this->password
+                $this->password,
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                ]
             );
             
-            // Configuration des attributs PDO
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->conn->exec("set names utf8");
         } catch(PDOException $e) {
-            // Log error internally, never expose to users
+            $this->error = $e->getMessage();
+            
             if(DEBUGGING) {
-                error_log("Database connection error: " . $e->getMessage());
+                // En mode debug, affiche les erreurs détaillées
+                echo "Erreur de connexion base de données:<br>";
+                echo "Host: " . $this->host . "<br>";
+                echo "DB: " . $this->db_name . "<br>";
+                echo "User: " . $this->username . "<br>";
+                echo "Message: " . $this->error . "<br>";
+                error_log("Database connection error: " . $this->error);
             }
         }
 
         return $this->conn;
+    }
+    
+    /**
+     * Retourne le dernier message d'erreur
+     * @return string|null
+     */
+    public function getError() {
+        return $this->error;
     }
 }
 ?> 

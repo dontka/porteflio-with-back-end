@@ -53,22 +53,35 @@
 
     <!-- Theme style -->
     <link id="theme-style" rel="stylesheet" href="<?php echo $systemUrl; ?>assets/css/styles.min.css?v=<?php echo time(); ?>">
-
-    <!-- Initialize dark mode: body has dark-mode class by default, remove if localStorage says so -->
-    <script>
-        // If user previously disabled dark mode, remove the class immediately to prevent flash
-        if (localStorage.getItem('darkMode') === 'disabled') {
-            document.body.classList.remove('dark-mode');
-        }
-    </script>
 </head>
 
-<body class="dark-mode">
+<body>
+    <!-- Dark Mode: Apply class if needed (runs synchronously, immediately in body) -->
+    <script>
+        // Dark mode is ON by default, unless localStorage says 'disabled'
+        var isDarkModeDisabled = localStorage.getItem('darkMode') === 'disabled';
+        if (!isDarkModeDisabled) {
+            document.body.classList.add('dark-mode');
+            console.log('✓ Dark mode applied (default)');
+        } else {
+            console.log('✓ Light mode applied (from localStorage)');
+        }
+    </script>
+
     <!-- Skip Navigation -->
     <a href="#main-content" class="skip-link">Aller au contenu principal</a>
 
     <!-- Include Navigation Partial -->
     <?php $view->include('partials/navbar', ['isScrolled' => $isScrolled ?? false]); ?>
+
+    <!-- Sync checkbox with body dark-mode state -->
+    <script>
+        var darkSwitch = document.getElementById('darkSwitch');
+        if (darkSwitch) {
+            darkSwitch.checked = document.body.classList.contains('dark-mode');
+            console.log('Checkbox synced to:', darkSwitch.checked);
+        }
+    </script>
 
     <!-- Main Content -->
     <main id="main-content">
@@ -84,9 +97,9 @@
     <!-- Scripts -->
     <script src="<?php echo $systemUrl; ?>assets/plugins/popper.min.js"></script>
     <script src="<?php echo $systemUrl; ?>assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="<?php echo $systemUrl; ?>assets/plugins/dark-mode-switch/dark-mode-switch.min.js"></script>
     
-    <!-- GitHub specific scripts (conditionally loaded) -->
+    <!-- NOTE: dark-mode-switch plugin removed - we use our own dark mode management -->
+    <!-- <script src="<?php echo $systemUrl; ?>assets/plugins/dark-mode-switch/dark-mode-switch.min.js"></script> -->
     <?php if (strpos($pageTitle ?? '', 'Portfolio') !== false): ?>
     <script src="<?php echo $systemUrl; ?>assets/plugins/vanilla-rss/dist/rss.global.min.js"></script>
     <script src="<?php echo $systemUrl; ?>assets/plugins/github-calendar/dist/github-calendar.min.js"></script>
@@ -102,7 +115,7 @@
     <?php endif; ?>
 
     <!-- Default scripts -->
-    <script src="<?php echo $systemUrl; ?>assets/js/main.min.js?v=<?php echo time(); ?>"></script>
+    <script src="<?php echo $systemUrl; ?>assets/js/main.js?v=<?php echo time(); ?>"></script>
 
     <!-- Page-specific inline scripts -->
     <?php if (!empty($inlineScripts)): ?>

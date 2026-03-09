@@ -35,23 +35,24 @@
         define("DB_PORT", '3306');
     }
     
-    define("SYST_URL", 'http://donatien-kanane.xo.je/');
-    
     // Détecte automatiquement le domaine (localhost vs production)
-    // En local: forcer HTTP pour éviter les problèmes SSL sur localhost sans certificat
-    // En production: HTTPS automatique
     if ($isLocalhost) {
-        $protocol = 'http'; // Force HTTP en local pour éviter les erreurs SSL
+        // Configuration locale: toujours /porteflio-with-back-end/
+        $protocol = 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $basePath = '/porteflio-with-back-end/';
     } else {
+        // Configuration production: détection automatique du chemin
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        $basePath = dirname($_SERVER['SCRIPT_NAME'] ?? '/');
+        if ($basePath === '\\' || $basePath === '/' || $basePath === '.') {
+            $basePath = '/';
+        } else {
+            $basePath = rtrim($basePath, '/') . '/';
+        }
     }
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $basePath = dirname($_SERVER['SCRIPT_NAME'] ?? '/');
-    if ($basePath === '\\' || $basePath === '/' || $basePath === '.') {
-        $basePath = '/';
-    } else {
-        $basePath = rtrim($basePath, '/') . '/';
-    }
+    
     define("SYS_URL", $protocol . '://' . $host . $basePath);
     
     define("DEBUGGING", true);

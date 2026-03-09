@@ -1,84 +1,9 @@
 <?php
-require_once 'config.php';
-session_start();
-require_once 'includes/Database.php';
-require_once 'includes/functions.php';
-
-// Si l'utilisateur est déjà connecté, rediriger vers la page d'accueil
-if (isUserLoggedIn()) {
-    header('Location: index.php');
-    exit;
-}
-
-$error = '';
-$success = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Vérification du token CSRF
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== ($_SESSION['csrf_token'] ?? '')) {
-        $error = 'Token de sécurité invalide, veuillez réessayer';
-    } else {
-        $username = trim($_POST['username'] ?? '');
-        $email = trim($_POST['email'] ?? '');
-        $password = $_POST['password'] ?? '';
-        $password_confirm = $_POST['password_confirm'] ?? '';
-
-        if (empty($username) || empty($email) || empty($password) || empty($password_confirm)) {
-            $error = 'Veuillez remplir tous les champs';
-        } elseif (mb_strlen($username) < 3 || mb_strlen($username) > 50) {
-            $error = 'Le nom d\'utilisateur doit contenir entre 3 et 50 caractères';
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error = 'Veuillez entrer une adresse email valide';
-        } elseif (mb_strlen($password) < 6) {
-            $error = 'Le mot de passe doit contenir au moins 6 caractères';
-        } elseif ($password !== $password_confirm) {
-            $error = 'Les mots de passe ne correspondent pas';
-        } else {
-            $database = new Database();
-            $db = $database->getConnection();
-
-            try {
-                $stmt = $db->prepare('SELECT id FROM users WHERE email = ? OR username = ?');
-                $stmt->execute([$email, $username]);
-
-                if ($stmt->fetch()) {
-                    $error = 'Cet email ou nom d\'utilisateur est déjà utilisé';
-                } else {
-                    // Hacher le mot de passe avec bcrypt
-                    $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-                    $stmt = $db->prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)');
-                    $stmt->execute([$username, $email, $hashedPassword]);
-
-                    // Régénérer l'ID de session
-                    session_regenerate_id(true);
-                    $_SESSION['user_id'] = $db->lastInsertId();
-                    $_SESSION['username'] = $username;
-
-                    // Redirection sécurisée
-                    $redirect = $_GET['redirect'] ?? 'index.php';
-                    $allowedPaths = ['index.php', 'project.php', 'blog.php'];
-                    $parsedPath = parse_url($redirect, PHP_URL_PATH);
-                    $baseName = basename($parsedPath ?? '');
-                    if (!in_array($baseName, $allowedPaths, true)) {
-                        $redirect = 'index.php';
-                    }
-                    header('Location: ' . $redirect);
-                    exit;
-                }
-            } catch (PDOException $e) {
-                if (isDebugMode()) {
-                    $error = 'Erreur de base de données : ' . $e->getMessage();
-                } else {
-                    $error = 'Une erreur est survenue, veuillez réessayer';
-                }
-            }
-        }
-    }
-}
-
-// Générer un token CSRF
-$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+/**
+ * REGISTER.PHP - Page d'inscription
+ * Rendue par RegisterController
+ * Variables disponibles: $error, $systemUrl
+ */
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo substr(getDefaultLocale(), 0, 2); ?>">
@@ -94,11 +19,11 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/fontawesome/css/all.min.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo $systemUrl; ?>assets/css/styles.min.css">
 </head>
 <body class="login-page">
 
@@ -114,7 +39,7 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             <!-- Left branding panel -->
             <div class="login-brand-panel">
                 <div class="login-brand-content">
-                    <a href="index.php" class="login-brand-logo">DK<span>.</span></a>
+                    <a href="<?php echo $systemUrl; ?>" class="login-brand-logo">DK<span>.</span></a>
                     <h2>Rejoignez-nous</h2>
                     <p>Créez votre compte pour interagir avec les projets et partager vos commentaires.</p>
                     <div class="login-brand-decoration">
@@ -138,7 +63,7 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                     </div>
                 <?php endif; ?>
 
-                <form method="POST" action="">
+                <form method="POST" action="<?php echo $systemUrl; ?>register">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                     <div class="form-floating-custom mb-3">
                         <label for="username">Nom d'utilisateur</label>
@@ -174,15 +99,15 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                 </form>
 
                 <div class="login-footer">
-                    <a href="login.php"><i class="fas fa-sign-in-alt"></i> Déjà un compte ? Se connecter</a>
+                    <a href="<?php echo $systemUrl; ?>login"><i class="fas fa-sign-in-alt"></i> Déjà un compte ? Se connecter</a>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="assets/plugins/popper.min.js"></script>
-    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="assets/plugins/dark-mode-switch/dark-mode-switch.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/popper.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="<?php echo $systemUrl; ?>assets/plugins/dark-mode-switch/dark-mode-switch.min.js"></script>
 </body>
 </html>

@@ -1,5 +1,18 @@
 "use strict";
 
+// ===== DARK MODE: Initialize IMMEDIATELY (before DOMContentLoaded) =====
+(function() {
+    var darkSwitch = document.getElementById('darkSwitch');
+    if (darkSwitch) {
+        // Get the ACTUAL current state from body element
+        var isDarkModeActive = document.body.classList.contains('dark-mode');
+        
+        // Sync checkbox to actual state RIGHT NOW
+        darkSwitch.checked = isDarkModeActive;
+        console.log('Dark Mode Init:', isDarkModeActive ? 'ON (checked)' : 'OFF (unchecked)');
+    }
+})();
+
 document.addEventListener('DOMContentLoaded', function() {
 
     // ===== Navbar scroll effect =====
@@ -220,36 +233,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ===== Dark mode =====
-    var darkSwitch = document.getElementById('darkSwitch');
-    if (darkSwitch) {
-        // Synchroniser le checkbox avec l'état actuel du body
-        darkSwitch.checked = document.body.classList.contains('dark-mode');
-        
-        // Écouter les changements du checkbox
-        darkSwitch.addEventListener('change', function() {
-            if (this.checked) {
-                document.body.classList.add('dark-mode');
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                document.body.classList.remove('dark-mode');
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        });
-        
-        // Écouter les changements de préférence système (seulement si localStorage vide)
-        if (window.matchMedia && localStorage.getItem('darkMode') === null) {
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-                if (e.matches) {
+    // ===== Dark Mode Management: Handle checkbox changes =====
+    (function() {
+        var darkSwitch = document.getElementById('darkSwitch');
+        if (darkSwitch) {
+            // Listen to checkbox changes
+            darkSwitch.addEventListener('change', function() {
+                var isNowChecked = this.checked;
+                
+                if (isNowChecked) {
+                    // User CHECKED: Dark mode ON
                     document.body.classList.add('dark-mode');
-                    darkSwitch.checked = true;
+                    localStorage.removeItem('darkMode'); // Dark is default, so remove the flag
+                    console.log('✓ Dark mode: ON');
                 } else {
+                    // User UNCHECKED: Light mode ON
                     document.body.classList.remove('dark-mode');
-                    darkSwitch.checked = false;
+                    localStorage.setItem('darkMode', 'disabled'); // Store that user wants light mode
+                    console.log('✓ Dark mode: OFF (light mode saved)', localStorage.getItem('darkMode'));
                 }
             });
         }
-    }
+    })();
+
 
     // ===== Smooth scroll for anchor links =====
     document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {

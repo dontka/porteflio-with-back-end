@@ -66,7 +66,8 @@ class BlogController extends BaseController
             'pageUrl' => $blogUrl,
             'pageImage' => $blogImage,
             'ogType' => 'article',
-            'isScrolled' => true
+            'isScrolled' => true,
+            'db' => $this->db
         ]);
     }
 }

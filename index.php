@@ -43,6 +43,13 @@ $router->add('GET', '/project/{slug}', 'ProjectController', 'show'); // Backward
 // Routes du blog
 $router->add('GET', '/blog/{slug}', 'BlogController', 'show');
 
+// Routes d'authentification
+$router->add('GET', '/login', 'LoginController', 'showForm');
+$router->add('POST', '/login', 'LoginController', 'handleLogin');
+$router->add('GET', '/register', 'RegisterController', 'showForm');
+$router->add('POST', '/register', 'RegisterController', 'handleRegister');
+$router->add('GET', '/logout', 'LogoutController', 'logout');
+
 // Routes API
 $router->add('POST', '/api', 'APIController', 'route');
 

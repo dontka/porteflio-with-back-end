@@ -65,7 +65,8 @@ class ProjectController extends BaseController
             'pageUrl' => $projectUrl,
             'pageImage' => $projectImage,
             'ogType' => 'article',
-            'isScrolled' => true
+            'isScrolled' => true,
+            'db' => $this->db
         ]);
     }
 }

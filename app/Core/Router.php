@@ -85,22 +85,32 @@ class Router
 
     /**
      * Extraire le chemin de la requête
+     * Supporte à la fois /projet/slug et /index.php/projet/slug
      */
     private function getPath()
     {
-        // Récupérer le chemin demandé
-        $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
-
-        // Retirer la base du chemin (ex: /porteflio-with-back-end)
-        $base_path = dirname($_SERVER['SCRIPT_NAME'] ?? '/');
-        if ($base_path !== '/' && strpos($request_uri, $base_path) === 0) {
-            $request_uri = substr($request_uri, strlen($base_path));
+        // Priorité 1: Utiliser PATH_INFO s'il est disponible (quand accès direct à index.php)
+        if (!empty($_SERVER['PATH_INFO'])) {
+            $path = $_SERVER['PATH_INFO'];
+        } else {
+            // Priorité 2: Extraire du REQUEST_URI
+            $request_uri = $_SERVER['REQUEST_URI'] ?? '/';
+            
+            // Retirer la base du chemin (ex: /porteflio-with-back-end)
+            $base_path = dirname($_SERVER['SCRIPT_NAME'] ?? '/');
+            if ($base_path !== '/' && strpos($request_uri, $base_path) === 0) {
+                $request_uri = substr($request_uri, strlen($base_path));
+            }
+            
+            // Retirer /index.php si présent au début
+            if (strpos($request_uri, '/index.php/') === 0) {
+                $request_uri = substr($request_uri, strlen('/index.php'));
+            }
+            
+            $path = explode('?', $request_uri)[0];
         }
-
-        // Retirer les query strings
-        $path = explode('?', $request_uri)[0];
+        
         $path = rtrim($path, '/') ?: '/';
-
         return $path;
     }
 

@@ -50,6 +50,52 @@ $router->add('GET', '/register', 'RegisterController', 'showForm');
 $router->add('POST', '/register', 'RegisterController', 'handleRegister');
 $router->add('GET', '/logout', 'LogoutController', 'logout');
 
+// ============================================================
+// ROUTES D'ADMINISTRATION
+// ============================================================
+
+// Dashboard administrateur
+$router->add('GET', '/admin', 'AdminController', 'dashboard');
+
+// Gestion des articles de blog
+$router->add('GET', '/admin/blog', 'AdminBlogController', 'index');
+$router->add('GET', '/admin/blog/create', 'AdminBlogController', 'create');
+$router->add('POST', '/admin/blog/store', 'AdminBlogController', 'store');
+$router->add('GET', '/admin/blog/edit/{id}', 'AdminBlogController', 'edit');
+$router->add('POST', '/admin/blog/update/{id}', 'AdminBlogController', 'update');
+$router->add('POST', '/admin/blog/delete/{id}', 'AdminBlogController', 'delete');
+
+// Gestion des projets
+$router->add('GET', '/admin/projects', 'AdminProjectController', 'index');
+$router->add('GET', '/admin/projects/create', 'AdminProjectController', 'create');
+$router->add('POST', '/admin/projects/store', 'AdminProjectController', 'store');
+$router->add('GET', '/admin/projects/edit/{id}', 'AdminProjectController', 'edit');
+$router->add('POST', '/admin/projects/update/{id}', 'AdminProjectController', 'update');
+$router->add('POST', '/admin/projects/delete/{id}', 'AdminProjectController', 'delete');
+
+// Gestion des compétences
+$router->add('GET', '/admin/skills', 'AdminSkillController', 'index');
+$router->add('GET', '/admin/skills/create', 'AdminSkillController', 'create');
+$router->add('POST', '/admin/skills/store', 'AdminSkillController', 'store');
+$router->add('GET', '/admin/skills/edit/{id}', 'AdminSkillController', 'edit');
+$router->add('POST', '/admin/skills/update/{id}', 'AdminSkillController', 'update');
+$router->add('POST', '/admin/skills/delete/{id}', 'AdminSkillController', 'delete');
+
+// Gestion des expériences
+$router->add('GET', '/admin/experience', 'AdminExperienceController', 'index');
+$router->add('GET', '/admin/experience/create', 'AdminExperienceController', 'create');
+$router->add('POST', '/admin/experience/store', 'AdminExperienceController', 'store');
+$router->add('GET', '/admin/experience/edit/{id}', 'AdminExperienceController', 'edit');
+$router->add('POST', '/admin/experience/update/{id}', 'AdminExperienceController', 'update');
+$router->add('POST', '/admin/experience/delete/{id}', 'AdminExperienceController', 'delete');
+
+// Gestion des utilisateurs et logs
+$router->add('GET', '/admin/users', 'AdminController', 'users');
+$router->add('POST', '/admin/promote-user', 'AdminController', 'promoteUser');
+$router->add('POST', '/admin/revoke-user', 'AdminController', 'revokeUser');
+$router->add('GET', '/admin/logs', 'AdminController', 'logs');
+$router->add('GET', '/admin/settings', 'AdminController', 'settings');
+
 // Routes API
 $router->add('POST', '/api', 'APIController', 'route');
 
@@ -58,7 +104,7 @@ $router->add('POST', '/api', 'APIController', 'route');
 // ============================================================
 
 try {
-    $router->dispatch();
+    echo $router->dispatch();
 } catch (\Exception $e) {
     http_response_code(500);
     if (DEBUGGING) {

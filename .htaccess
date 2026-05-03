@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /
+    RewriteBase /afiazone/
     
     # Skip rewriting for existing files and directories (assets, static files)
     RewriteCond %{REQUEST_FILENAME} !-f

@@ -60,7 +60,7 @@ class LoginController extends BaseController
             $password = $_POST['password'];
 
             try {
-                $stmt = $this->db->prepare('SELECT id, username, password FROM users WHERE email = ?');
+                $stmt = $this->db->prepare('SELECT id, username, email, password, is_admin FROM users WHERE email = ?');
                 $stmt->execute([$email]);
                 $user = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -82,6 +82,8 @@ class LoginController extends BaseController
                     session_regenerate_id(true);
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['username'] = $user['username'];
+                    $_SESSION['email'] = $user['email'];
+                    $_SESSION['is_admin'] = (int)$user['is_admin'];
 
                     // Redirection sécurisée
                     $redirect = $_GET['redirect'] ?? SYS_URL;
@@ -118,6 +120,7 @@ class LoginController extends BaseController
             SYS_URL,
             SYS_URL . 'projet/',
             SYS_URL . 'blog/',
+            SYS_URL . 'admin',  // Allow admin access
         ];
 
         foreach ($allowedPaths as $allowed) {

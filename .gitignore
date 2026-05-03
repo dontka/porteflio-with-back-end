@@ -48,3 +48,4 @@ cv_donatien_kanane.md
 # Test Files
 test_*.php
 *_test.php
+*.env

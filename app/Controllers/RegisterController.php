@@ -120,6 +120,7 @@ class RegisterController extends BaseController
             SYS_URL,
             SYS_URL . 'projet/',
             SYS_URL . 'blog/',
+            SYS_URL . 'admin',  // Allow admin access
         ];
 
         foreach ($allowedPaths as $allowed) {

@@ -31,7 +31,7 @@ class LoginController extends BaseController
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         }
 
-        echo $this->render('login', [
+        echo $this->renderPartial('login', [
             'error' => $error,
             'systemUrl' => $systemUrl,
             'pageTitle' => 'Connexion — Donatien KANANE',
@@ -100,7 +100,7 @@ class LoginController extends BaseController
         
         $systemUrl = SYS_URL;
 
-        echo $this->render('login', [
+        echo $this->renderPartial('login', [
             'error' => $error ?? '',
             'systemUrl' => $systemUrl,
             'pageTitle' => 'Connexion — Donatien KANANE',

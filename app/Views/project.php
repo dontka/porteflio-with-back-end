@@ -396,7 +396,7 @@
             submitBtn.prop('disabled', true).html('<i class="fas fa-circle-notch fa-spin"></i> Envoi...');
 
             $.ajax({
-                url: SYSTEM_URL + 'api.php?action=comment',
+                url: SYSTEM_URL + 'api?action=comment',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
@@ -487,7 +487,7 @@
             btn.addClass('like-pulse');
 
             $.ajax({
-                url: SYSTEM_URL + 'api.php?action=like',
+                url: SYSTEM_URL + 'api?action=like',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: commentId }),
@@ -554,7 +554,7 @@
             submitBtn.prop('disabled', true).html('<i class="fas fa-circle-notch fa-spin"></i>');
 
             $.ajax({
-                url: SYSTEM_URL + 'api.php?action=edit-comment',
+                url: SYSTEM_URL + 'api?action=edit_comment',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: commentId, content: content }),
@@ -590,7 +590,7 @@
             const commentCard = $(`.comment-card[data-comment-id="${deleteTarget}"]`);
 
             $.ajax({
-                url: SYSTEM_URL + 'api.php?action=delete-comment',
+                url: SYSTEM_URL + 'api?action=delete_comment',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: deleteTarget }),

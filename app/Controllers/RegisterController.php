@@ -30,7 +30,7 @@ class RegisterController extends BaseController
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         }
 
-        echo $this->render('register', [
+        echo $this->renderPartial('register', [
             'error' => $error,
             'systemUrl' => $systemUrl,
             'pageTitle' => 'Inscription — Donatien KANANE',
@@ -102,7 +102,7 @@ class RegisterController extends BaseController
         
         $systemUrl = SYS_URL;
 
-        echo $this->render('register', [
+        echo $this->renderPartial('register', [
             'error' => $error ?? '',
             'systemUrl' => $systemUrl,
             'pageTitle' => 'Inscription — Donatien KANANE',

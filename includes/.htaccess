@@ -1,0 +1,16 @@
+# Deny direct access to includes directory
+<FilesMatch "\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Protect sensitive files
+<Files "config.php">
+    Deny from all
+</Files>
+<Files "Database.php">
+    Deny from all
+</Files>
+<Files "functions.php">
+    Deny from all
+</Files>

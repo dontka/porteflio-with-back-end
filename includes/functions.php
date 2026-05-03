@@ -409,9 +409,16 @@ function getBlogComments($db, $blog_slug, $current_user_id = null) {
  * Compte le total des commentaires d'un article de blog
  */
 function countBlogComments($db, $blog_slug) {
-    $stmt = $db->prepare("SELECT COUNT(*) FROM comments WHERE blog_slug = :slug");
-    $stmt->execute([':slug' => $blog_slug]);
-    return (int)$stmt->fetchColumn();
+    try {
+        $stmt = $db->prepare("SELECT COUNT(*) FROM comments WHERE blog_slug = :slug");
+        $stmt->execute([':slug' => $blog_slug]);
+        return (int)$stmt->fetchColumn();
+    } catch(PDOException $e) {
+        if(DEBUGGING) {
+            echo "Erreur : " . $e->getMessage();
+        }
+        return 0;
+    }
 }
 
 /**

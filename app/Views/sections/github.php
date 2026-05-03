@@ -32,18 +32,15 @@
 
         <!-- Calendar + Activity Feed -->
         <div class="row g-4 mt-2">
-            <div class="col-lg-7">
-                <div class="github-card">
-                    <h5><i class="fas fa-calendar-alt"></i> Calendrier de contributions</h5>
-                    <div id="github-graph" class="github-graph"></div>
-                </div>
-            </div>
-            <div class="col-lg-5">
+            <!-- Activity Feed -->
+            <div class="col-lg-12">
                 <div class="github-card">
                     <h5><i class="fas fa-stream"></i> Activité récente</h5>
                     <div id="ghfeed" class="ghfeed"></div>
                 </div>
             </div>
+            <!-- Note: Calendar component disabled due to plugin compatibility issues -->
+            <!-- GitHub Calendar will be restored in future update -->
         </div>
 
         <!-- CTA -->

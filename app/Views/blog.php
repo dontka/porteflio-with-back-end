@@ -1,8 +1,4 @@
-
-
-    <main id="main-content">
-
-    <!-- ===== BLOG HERO ===== -->
+<!-- ===== BLOG HERO ===== -->
     <section class="project-hero">
         <div class="project-hero-bg">
             <div class="shape shape-1"></div>
@@ -125,7 +121,7 @@
 
                         <div id="commentsList">
                             <?php
-                            $currentUserId = isUserLoggedIn() ? $_SESSION['user_id'] : null;
+                            $currentUserId = isUserLoggedIn() ? ($_SESSION['user_id'] ?? null) : null;
                             $comments = getBlogComments($db, $post['slug'], $currentUserId);
                             if (empty($comments)): ?>
                                 <div class="comment-empty-state">
@@ -256,9 +252,6 @@
         </div>
     </div>
 
-    </main>
-
-    
     <script>
     $(document).ready(function() {
         const BLOG_SLUG = <?php echo json_encode($post['slug']); ?>;
@@ -381,7 +374,7 @@
             if (!content) { showToast('warning', 'Veuillez entrer un commentaire'); return; }
             submitBtn.prop('disabled', true).html('<i class="fas fa-circle-notch fa-spin"></i> Envoi...');
             $.ajax({
-                url: SYSTEM_URL + 'api.php?action=comment',
+                url: SYSTEM_URL + 'api?action=comment',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ blog_slug: BLOG_SLUG, content: content, parent_id: parentId || null }),
@@ -449,7 +442,7 @@
             const commentId = btn.data('comment-id');
             btn.addClass('like-pulse');
             $.ajax({
-                url: SYSTEM_URL + 'api.php?action=like',
+                url: SYSTEM_URL + 'api?action=like',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: commentId }),
@@ -501,7 +494,7 @@
             if (!content) { showToast('warning', 'Le commentaire ne peut pas être vide'); return; }
             submitBtn.prop('disabled', true).html('<i class="fas fa-circle-notch fa-spin"></i>');
             $.ajax({
-                url: SYSTEM_URL + 'api.php?action=edit-comment',
+                url: SYSTEM_URL + 'api?action=edit_comment',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: commentId, content: content }),
@@ -536,7 +529,7 @@
             const modal = $('#deleteModal');
             const commentCard = $(`.comment-card[data-comment-id="${deleteTarget}"]`);
             $.ajax({
-                url: SYSTEM_URL + 'api.php?action=delete-comment',
+                url: SYSTEM_URL + 'api?action=delete_comment',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ comment_id: deleteTarget }),
@@ -594,5 +587,3 @@
             </div>
         </div>
     </div>
-</body>
-</html>

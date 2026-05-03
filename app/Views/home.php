@@ -26,31 +26,48 @@ $pageStyles = [
 // Home page specific scripts
 $pageScripts = [
     'assets/plugins/vanilla-rss/dist/rss.global.min.js',
-    'assets/plugins/github-calendar/dist/github-calendar.min.js',
-    'assets/plugins/mustache.min.js',
-    'assets/plugins/github-activity/src/github-activity.min.js'
+    'assets/plugins/mustache.min.js'
 ];
 
-// GitHub initialization
+// GitHub initialization - only load GitHub scripts if username is configured
 if (!empty($profile['github_username'])):
     $ghUser = sanitizeOutput($profile['github_username']);
+    
+    // Pre-compute the activity script URL outside the heredoc
+    $activityScriptUrl = $systemUrl . 'assets/plugins/github-activity/src/github-activity.min.js';
+    
+    // NOTE: github-calendar plugin has a bug where it tries to access null properties
+    // The GitHub stats are already displayed via images, so this plugin is not critical
+    // If you want to use it later, ensure the HTML elements have the correct IDs/structure
+    
     $inlineScripts = <<<JS
 (function() {
     var username = "$ghUser";
-    var graphEl = document.getElementById('github-graph');
-    var feedEl = document.getElementById('ghfeed');
-
-    if (graphEl) {
-        GitHubCalendar(graphEl, username, { responsive: true, global_stats: false });
-    }
-
-    if (feedEl) {
-        GitHubActivity.feed({
-            username: username,
-            selector: '#ghfeed',
-            limit: 5
-        });
-    }
+    var activityScriptUrl = "$activityScriptUrl";
+    
+    // Load github-activity.min.js only (calendar disabled due to plugin bug)
+    setTimeout(function() {
+        var activityScript = document.createElement('script');
+        activityScript.src = activityScriptUrl;
+        activityScript.onload = function() {
+            var feedEl = document.getElementById('ghfeed');
+            if (feedEl && typeof GitHubActivity !== 'undefined') {
+                try {
+                    GitHubActivity.feed({
+                        username: username,
+                        selector: '#ghfeed',
+                        limit: 5
+                    });
+                } catch (e) {
+                    console.warn('GitHub Activity error:', e);
+                }
+            }
+        };
+        activityScript.onerror = function() {
+            console.warn('Failed to load github-activity.min.js');
+        };
+        document.body.appendChild(activityScript);
+    }, 1000);
 })();
 JS;
 endif;

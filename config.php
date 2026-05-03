@@ -27,20 +27,20 @@
         define("DB_HOST", 'localhost');
         define("DB_PORT", '3306');
     } else {
-        // Configuration production (InfinityFree)
-        define("DB_NAME", 'if0_41320885_dontka');
-        define("DB_USER", 'if0_41320885');
-        define("DB_PASSWORD", 'Afiatalk243');
-        define("DB_HOST", 'sql100.infinityfree.com');
+        // Configuration production (LWS)
+        define("DB_NAME", 'afiaz2782593');
+        define("DB_USER", 'afiaz2782593');
+        define("DB_PASSWORD", 'Afiazone243!');
+        define("DB_HOST", '91.216.107.187');
         define("DB_PORT", '3306');
     }
     
     // Détecte automatiquement le domaine (localhost vs production)
     if ($isLocalhost) {
-        // Configuration locale: toujours /porteflio-with-back-end/
+        // Configuration locale: toujours /afiazone/
         $protocol = 'http';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $basePath = '/porteflio-with-back-end/';
+        $basePath = '/afiazone/';
     } else {
         // Configuration production: détection automatique du chemin
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';

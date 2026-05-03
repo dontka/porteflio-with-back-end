@@ -34,7 +34,7 @@
                 <div class="col-lg-6">
                     <div class="featured-project-content">
                         <h3><?php echo sanitizeOutput($featured['title']); ?></h3>
-                        <p><?php echo sanitizeWYSIWYG($featured['description']); ?></p>
+                        <p><?php echo mb_strimwidth(sanitizeWYSIWYG($featured['description']), 0, 120, '...'); ?></p>
                         <div class="card-engagement">
                             <?php
                                 $fUrl = $featured['project_url'] ?? '';
